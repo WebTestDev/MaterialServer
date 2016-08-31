@@ -1,0 +1,61 @@
+<?xml version="1.0"?>  
+<!DOCTYPE hibernate-mapping PUBLIC  
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"  
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.thingword.alphonso.bean">
+
+	<class name="User" table="UserInfo">
+		<id name="userID" column="Id" type="int">
+			<generator class="increment" />
+		</id>
+		<property name="username" type="string" />
+		<property name="passwd" type="string" />
+		<property name="authority" type="string" />
+	</class>
+
+	<class name="LoadingInfo" table="LoadingInfo">
+		<id name="Id" column="Id" type="int">
+			<generator class="increment" />
+		</id>
+		<property name="cBatch" type="string" />
+		<property name="date" type="date" />
+		<property name="iQuantity" type="string" />
+		<property name="cInvStd" type="string" />
+		<property name="cInvName" type="string" />
+		<property name="cInvCode" type="string" />
+	</class>
+
+	<class name="UnLoadingInfo" table="unloadingInfo">
+		<id name="Id" column="Id" type="int">
+			<generator class="increment" />
+		</id>
+		<property name="cBatch" type="string" />
+		<property name="date" type="date" />
+		<property name="iQuantity" type="string" />
+		<property name="cInvStd" type="string" />
+		<property name="cInvName" type="string" />
+		<property name="cInvCode" type="string" />
+		<property name="cInvDefine8" type="string" />
+		<property name="invcode" type="string" />
+		<property name="shopnum" type="string" />
+		<property name="executor" type="string" />
+	</class>
+
+	<class name="DistributionInfo" table="distriInfo">
+		<id name="Id" column="Id" type="int">
+			<generator class="increment" />
+		</id>
+		<property name="cBatch" type="string" />
+		<property name="date" type="date" />
+		<property name="iQuantity" type="string" />
+		<property name="cInvStd" type="string" />
+		<property name="cInvName" type="string" />
+		<property name="cInvCode" type="string" />
+		<property name="cMoCode" type="string" />
+		<property name="shopnum" type="string" />
+		<property name="invcode" type="string" />
+		<property name="cinvstd_1" type="string" />
+	</class>
+
+</hibernate-mapping>

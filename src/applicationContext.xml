@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+  http://www.springframework.org/schema/beans/spring-beans.xsd
+  http://www.springframework.org/schema/context
+  http://www.springframework.org/schema/context/spring-context.xsd">
+	<!-- 激活那些已经在g容器里注册过的bean -->
+	<context:annotation-config></context:annotation-config>
+
+	<!-- 在容器中注入bean -->
+	<bean id="UserServiceImpl" class="com.thingword.alphonso.service.impl.UserServiceImpl" />
+	<bean id="UserDaoImpl" class="com.thingword.alphonso.dao.impl.UserDaoImpl" />
+
+	<bean id="LoadingInfoServiceImpl"
+		class="com.thingword.alphonso.service.impl.LoadingInfoServiceImpl" />
+	<bean id="LoadingInfoDaoImpl" class="com.thingword.alphonso.dao.impl.LoadingInfoDaoImpl" />
+
+	<bean id="UnLoadingInfoServiceImpl"
+		class="com.thingword.alphonso.service.impl.UnLoadingInfoServiceImpl" />
+	<bean id="UnLoadingInfoDaoImpl" class="com.thingword.alphonso.dao.impl.UnLoadingInfoDaoImpl" />
+
+	<bean id="DistriInfoServiceImpl"
+		class="com.thingword.alphonso.service.impl.DistriInfoServiceImpl" />
+	<bean id="DistriInfoDaoImpl" class="com.thingword.alphonso.dao.impl.DistriInfoDaoImpl" />
+
+</beans>
