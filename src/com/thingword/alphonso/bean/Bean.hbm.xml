@@ -5,7 +5,7 @@
 
 <hibernate-mapping package="com.thingword.alphonso.bean">
 
-	<class name="User" table="UserInfo">
+	<class name="User" table="userinfo">
 		<id name="userID" column="Id" type="int">
 			<generator class="increment" />
 		</id>
@@ -14,7 +14,7 @@
 		<property name="authority" type="string" />
 	</class>
 
-	<class name="LoadingInfo" table="LoadingInfo">
+	<class name="LoadingInfo" table="loadinginfo">
 		<id name="Id" column="Id" type="int">
 			<generator class="increment" />
 		</id>
@@ -26,7 +26,7 @@
 		<property name="cInvCode" type="string" />
 	</class>
 
-	<class name="UnLoadingInfo" table="unloadingInfo">
+	<class name="UnLoadingInfo" table="unloadinginfo">
 		<id name="Id" column="Id" type="int">
 			<generator class="increment" />
 		</id>
@@ -42,7 +42,7 @@
 		<property name="executor" type="string" />
 	</class>
 
-	<class name="DistributionInfo" table="distriInfo">
+	<class name="DistributionInfo" table="distriinfo">
 		<id name="Id" column="Id" type="int">
 			<generator class="increment" />
 		</id>
@@ -56,6 +56,23 @@
 		<property name="shopnum" type="string" />
 		<property name="invcode" type="string" />
 		<property name="cinvstd_1" type="string" />
+	</class>
+
+	<class name="ProductionInfo" table="productioninfo">
+		<id name="Id" column="Id" type="int">
+			<generator class="increment" />
+		</id>
+		<property name="workshop" type="string" />
+		<property name="date" type="date" />
+		<property name="productline" type="string" />
+		<property name="tasknumber" type="string" />
+		<property name="productcode" type="string" />
+		<property name="spec" type="string" />
+		<property name="schedulednum" type="string" />
+		<property name="dailynum" type="string" />
+		<property name="remark" type="string" />
+		<property name="processflow" type="string" />
+		<property name="boardcode" type="string" />
 	</class>
 
 </hibernate-mapping>

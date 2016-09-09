@@ -8,6 +8,9 @@ public class MESSAGE {
 	public final static String LOGIN_FAIL = "用户名或密码错误";
 	
 	public final static String QUERY_FAIL = "查询失败";
+	public final static String QUERY_NONE = "没有记录";
 	public final static String QUERY_SUCCESS = "查询成功";
+	
+	public final static String NO_PRODUCTION_INFO = "未上传当天生产信息";
 	
 }

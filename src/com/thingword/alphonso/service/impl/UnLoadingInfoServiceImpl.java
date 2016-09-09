@@ -27,7 +27,7 @@ public class UnLoadingInfoServiceImpl implements UnLoadingInfoService {
 		ReturnData<UnLoadingInfo> returnData= new ReturnData<>();
 		List<UnLoadingInfo> ls= unloadingInfoDaoImpl.getUnLoadingInfoByDate(reqInfo.getDate(), reqInfo.getPerson());
 		returnData.setReturn_code(MESSAGE.RETURN_FAIL);
-		returnData.setReturn_msg(MESSAGE.QUERY_FAIL);
+		returnData.setReturn_msg(MESSAGE.QUERY_NONE);
 		if(ls != null){
 			if(ls.size() != 0){
 				returnData.setReturn_code(MESSAGE.RETURN_SUCCESS);

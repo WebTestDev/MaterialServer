@@ -27,7 +27,7 @@ public class DistriInfoServiceImpl implements DistriInfoService {
 		ReturnData<DistributionInfo> returnData= new ReturnData<>();
 		List<DistributionInfo> ls= distriInfoDaoImpl.getDistriInfoByDate(reqinfo.getDate(), reqinfo.getPerson());
 		returnData.setReturn_code(MESSAGE.RETURN_FAIL);
-		returnData.setReturn_msg(MESSAGE.QUERY_FAIL);
+		returnData.setReturn_msg(MESSAGE.QUERY_NONE);
 		if(ls != null){
 			if(ls.size() != 0){
 				returnData.setReturn_code(MESSAGE.RETURN_SUCCESS);
