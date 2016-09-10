@@ -1,10 +1,9 @@
-package com.thingword.alphonso.bean;
+package com.thingword.alphonso.Configure;
 
-import com.thingword.alphonso.Configure.MESSAGE;
-
-public class ReturnMessage {
+public class ReturnLoginInfo {
 	private String return_msg;
 	private String return_code;
+	private String authority;
 	public String getReturn_msg() {
 		return return_msg;
 	}
@@ -16,5 +15,11 @@ public class ReturnMessage {
 	}
 	public void setReturn_code(String return_code) {
 		this.return_code = return_code;
+	}
+	public String getAuthority() {
+		return authority;
+	}
+	public void setAuthority(String authority) {
+		this.authority = authority;
 	}
 }

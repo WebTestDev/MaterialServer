@@ -21,12 +21,16 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.hibernate.secure.internal.DisabledJaccServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.thingword.alphonso.Configure.ReqAddUser;
+import com.thingword.alphonso.Configure.ReqDelUser;
+import com.thingword.alphonso.Configure.ReqInfo;
+import com.thingword.alphonso.Configure.ReqUpdateUser;
+import com.thingword.alphonso.Configure.ReturnData;
+import com.thingword.alphonso.Configure.ReturnLoginInfo;
+import com.thingword.alphonso.Configure.ReturnMessage;
+import com.thingword.alphonso.Configure.ReturnUserList;
 import com.thingword.alphonso.bean.DistributionInfo;
 import com.thingword.alphonso.bean.LoadingInfo;
-import com.thingword.alphonso.bean.ReqInfo;
-import com.thingword.alphonso.bean.ReturnData;
-import com.thingword.alphonso.bean.ReturnLoginInfo;
-import com.thingword.alphonso.bean.ReturnMessage;
 import com.thingword.alphonso.bean.UnLoadingInfo;
 import com.thingword.alphonso.bean.User;
 import com.thingword.alphonso.dao.LoadingInfoDao;
@@ -37,6 +41,8 @@ import com.thingword.alphonso.service.impl.ExcelServiceImpl;
 import com.thingword.alphonso.service.impl.LoadingInfoServiceImpl;
 import com.thingword.alphonso.service.impl.UnLoadingInfoServiceImpl;
 import com.thingword.alphonso.service.impl.UserServiceImpl;
+
+import jersey.repackaged.com.google.common.collect.Lists;
 
 /**
  * 用户资源
@@ -110,6 +116,43 @@ public class UserResource {
 				uploadedInputStream);
 		return Response.status(200).entity(returnMessage.getReturn_msg()).build();
 
+	}
+
+	@GET
+	@Path("/reqUserList")
+	@Produces(MediaType.APPLICATION_JSON)
+	public ReturnUserList reqUserList() {
+		return userServiceImpl.getUserList();
+	}
+
+	@POST
+	@Path("/reqAddUser")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public ReturnUserList reqAddUser(ReqAddUser adduser) {
+		System.out.println("adduser" + adduser.getAdd_rights());
+		return userServiceImpl.createUser(adduser);
+	}
+
+	@POST
+	@Path("/reqDelUser")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public String reqDelUser(ReqDelUser deluser) {
+		System.out.println("deluser" + deluser.getId());
+		if (userServiceImpl.deleteUserById(deluser))
+			return String.valueOf(1);
+		else
+			return String.valueOf(0);
+	}
+	
+	@POST
+	@Path("/reqUpdateUser")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public ReturnUserList reqUpdateUser(ReqUpdateUser user) {
+		System.out.println("updateAddUser" + user.getEdit_account());
+		return userServiceImpl.updateUser(user);
+		//return userServiceImpl.createUser(adduser);
 	}
 
 	// /**

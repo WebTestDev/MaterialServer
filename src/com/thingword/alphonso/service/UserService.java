@@ -4,8 +4,12 @@ import java.util.List;
 
 import org.hibernate.loader.custom.Return;
 
-import com.thingword.alphonso.bean.ReturnLoginInfo;
-import com.thingword.alphonso.bean.ReturnMessage;
+import com.thingword.alphonso.Configure.ReqAddUser;
+import com.thingword.alphonso.Configure.ReqDelUser;
+import com.thingword.alphonso.Configure.ReqUpdateUser;
+import com.thingword.alphonso.Configure.ReturnLoginInfo;
+import com.thingword.alphonso.Configure.ReturnMessage;
+import com.thingword.alphonso.Configure.ReturnUserList;
 import com.thingword.alphonso.bean.User;
 
 
@@ -29,6 +33,14 @@ public interface UserService {
     public User getUserByName(String name);
     
     public ReturnLoginInfo checkUser(User user);
+    
+    public ReturnUserList getUserList();
+    
+    public ReturnUserList createUser(ReqAddUser user);
+    
+    public boolean deleteUserById(ReqDelUser user);
+    
+    public ReturnUserList updateUser(ReqUpdateUser user);
     
     
 }

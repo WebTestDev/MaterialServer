@@ -4,11 +4,11 @@ import java.util.List;
 
 import org.hibernate.loader.custom.Return;
 
+import com.thingword.alphonso.Configure.ReqInfo;
+import com.thingword.alphonso.Configure.ReturnData;
+import com.thingword.alphonso.Configure.ReturnMessage;
 import com.thingword.alphonso.bean.DistributionInfo;
 import com.thingword.alphonso.bean.LoadingInfo;
-import com.thingword.alphonso.bean.ReqInfo;
-import com.thingword.alphonso.bean.ReturnData;
-import com.thingword.alphonso.bean.ReturnMessage;
 import com.thingword.alphonso.bean.User;
 import com.thingword.alphonso.dao.LoadingInfoDao;
 

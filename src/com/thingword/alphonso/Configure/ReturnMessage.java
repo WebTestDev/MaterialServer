@@ -1,11 +1,8 @@
-package com.thingword.alphonso.bean;
+package com.thingword.alphonso.Configure;
 
-import java.util.List;
-
-public class ReturnData<T> {
+public class ReturnMessage {
 	private String return_msg;
 	private String return_code;
-	private List<T> data;
 	public String getReturn_msg() {
 		return return_msg;
 	}
@@ -18,11 +15,4 @@ public class ReturnData<T> {
 	public void setReturn_code(String return_code) {
 		this.return_code = return_code;
 	}
-	public List<T> getData() {
-		return data;
-	}
-	public void setData(List<T> data) {
-		this.data = data;
-	}
-
 }

@@ -6,10 +6,10 @@ import org.hibernate.loader.plan.exec.process.spi.ReturnReader;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.thingword.alphonso.Configure.MESSAGE;
+import com.thingword.alphonso.Configure.ReqInfo;
+import com.thingword.alphonso.Configure.ReturnData;
 import com.thingword.alphonso.bean.LoadingInfo;
 import com.thingword.alphonso.bean.ProductionInfo;
-import com.thingword.alphonso.bean.ReqInfo;
-import com.thingword.alphonso.bean.ReturnData;
 import com.thingword.alphonso.dao.LoadingInfoDao;
 import com.thingword.alphonso.dao.impl.LoadingInfoDaoImpl;
 import com.thingword.alphonso.dao.impl.ProductionInfoDaoImpl;

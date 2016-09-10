@@ -1,9 +1,11 @@
-package com.thingword.alphonso.bean;
+package com.thingword.alphonso.Configure;
 
-public class ReturnLoginInfo {
+import java.util.List;
+
+public class ReturnData<T> {
 	private String return_msg;
 	private String return_code;
-	private String authority;
+	private List<T> data;
 	public String getReturn_msg() {
 		return return_msg;
 	}
@@ -16,10 +18,11 @@ public class ReturnLoginInfo {
 	public void setReturn_code(String return_code) {
 		this.return_code = return_code;
 	}
-	public String getAuthority() {
-		return authority;
+	public List<T> getData() {
+		return data;
 	}
-	public void setAuthority(String authority) {
-		this.authority = authority;
+	public void setData(List<T> data) {
+		this.data = data;
 	}
+
 }

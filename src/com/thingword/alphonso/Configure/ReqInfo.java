@@ -1,4 +1,4 @@
-package com.thingword.alphonso.bean;
+package com.thingword.alphonso.Configure;
 
 public class ReqInfo {
 	private String date;

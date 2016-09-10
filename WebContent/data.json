@@ -1,0 +1,40 @@
+{
+    "data": [
+        [
+            "<input type='checkbox' value=''>",
+            "1",
+            "sb",
+            "123",
+            "abx",
+            "456",
+            "<span id='rights1'>仓库</span> <span id='rights2'>配料</span> <span id='rights3'>产线</span>"
+        ],
+        [
+            "<input type='checkbox' value=''>",
+            "1",
+            "vfgh",
+            "118",
+            "vfg",
+            "154184",
+            "<span id='rights2'>配料</span> <span id='rights3'>产线</span>"
+        ],
+        [
+            "<input type='checkbox' value=''>",
+            "1",
+            "sjub",
+            "128",
+            "yyr",
+            "158545",
+            "<span id='rights1'>仓库</span> <span id='rights3'>产线</span>"
+        ],
+        [
+            "<input type='checkbox' value=''>",
+            "1",
+            "tyjgf",
+            "123",
+            "Garrett Winters",
+            "157",
+            "<span id='rights1'>仓库</span>"
+        ]
+    ]
+}
