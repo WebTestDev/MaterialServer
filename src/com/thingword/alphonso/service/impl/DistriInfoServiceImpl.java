@@ -24,6 +24,9 @@ public class DistriInfoServiceImpl implements DistriInfoService {
 
 	@Override
 	public ReturnData<DistributionInfo> getDistriInfoByDate(ReqInfo reqinfo) {
+		
+		
+		
 		ReturnData<DistributionInfo> returnData= new ReturnData<>();
 		List<DistributionInfo> ls= distriInfoDaoImpl.getDistriInfoByDate(reqinfo.getDate(), reqinfo.getPerson());
 		returnData.setReturn_code(MESSAGE.RETURN_FAIL);

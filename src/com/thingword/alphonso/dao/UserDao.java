@@ -18,7 +18,7 @@ public interface UserDao {
     
     public User getUserByName(String name);
 
-    public boolean createUser(User user);  
+    public String createUser(User user);  
 
     public boolean updateUser(User user);  
 

@@ -31,16 +31,20 @@ import com.thingword.alphonso.Configure.ReturnMessage;
 import com.thingword.alphonso.Configure.ReturnUserList;
 import com.thingword.alphonso.bean.DistributionInfo;
 import com.thingword.alphonso.bean.LoadingInfo;
+import com.thingword.alphonso.bean.ProductionInfo;
 import com.thingword.alphonso.bean.UnLoadingInfo;
 import com.thingword.alphonso.bean.User;
 import com.thingword.alphonso.dao.LoadingInfoDao;
 import com.thingword.alphonso.dao.impl.LoadingInfoDaoImpl;
 import com.thingword.alphonso.service.LoadingInfoService;
+import com.thingword.alphonso.service.ProductionInfoService;
 import com.thingword.alphonso.service.impl.DistriInfoServiceImpl;
 import com.thingword.alphonso.service.impl.ExcelServiceImpl;
 import com.thingword.alphonso.service.impl.LoadingInfoServiceImpl;
+import com.thingword.alphonso.service.impl.ProductionInfoServiceImpl;
 import com.thingword.alphonso.service.impl.UnLoadingInfoServiceImpl;
 import com.thingword.alphonso.service.impl.UserServiceImpl;
+import com.thingword.alphonso.service.impl.UserTestServiceImpl;
 
 import jersey.repackaged.com.google.common.collect.Lists;
 
@@ -67,6 +71,12 @@ public class UserResource {
 
 	@Autowired
 	private ExcelServiceImpl excelServiceImpl;
+	
+	@Autowired
+	private ProductionInfoServiceImpl productionInfoServiceImpl;
+	
+	@Autowired
+	private UserTestServiceImpl userTestServiceImpl;
 
 	public UserResource() {
 		LOGGER.fine("UserResource()");
@@ -97,6 +107,14 @@ public class UserResource {
 	public ReturnData<UnLoadingInfo> reqUnLoadingInfo(ReqInfo reqInfo) {
 		return unloadingInfoServiceImpl.getUnLoadingInfoByDate(reqInfo);
 	}
+	
+	@POST
+	@Path("/reqProductionInfo")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public ReturnData<ProductionInfo> reqProductionInfo(ReqInfo reqInfo) {
+		return productionInfoServiceImpl.getProductionInfoByDate(reqInfo.getDate());
+	}
 
 	@POST
 	@Path("/reqDistriInfo")
@@ -105,18 +123,59 @@ public class UserResource {
 	public ReturnData<DistributionInfo> reqDistriInfo(ReqInfo reqInfo) {
 		return distriInfoServiceImpl.getDistriInfoByDate(reqInfo);
 	}
-
+	
 	@POST
-	@Path("/upload")
-	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	public Response uploadFile(@FormDataParam("file") InputStream uploadedInputStream,
-			@FormDataParam("file") FormDataContentDisposition fileDetail) {
+	@Path("/reqUserTest")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public ReturnData<DistributionInfo> reqUserTest(ReqInfo reqInfo) {
+		userTestServiceImpl.getAllUsers();
+		return null;
+	}
 
-		ReturnMessage returnMessage = excelServiceImpl.uploadProductionInfo(fileDetail.getFileName(),
+//	@POST
+//	@Path("/upload")
+//	@Consumes(MediaType.MULTIPART_FORM_DATA)
+//	public Response uploadFile(@FormDataParam("file") InputStream uploadedInputStream,
+//			@FormDataParam("file") FormDataContentDisposition fileDetail) {
+//
+//		ReturnMessage returnMessage = excelServiceImpl.uploadProductionInfo(fileDetail.getFileName(),
+//				uploadedInputStream);
+//		return Response.status(200).entity(returnMessage.getReturn_msg()).build();
+//
+//	}
+	
+	@POST
+	@Path("/uploadProductionInfoForStore")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	public ReturnData<UnLoadingInfo> uploadProductionInfoForStore(@FormDataParam("filepath") InputStream uploadedInputStream,
+			@FormDataParam("filepath") FormDataContentDisposition fileDetail) {
+
+		return excelServiceImpl.uploadProductionInfoStore(fileDetail.getFileName(),
 				uploadedInputStream);
-		return Response.status(200).entity(returnMessage.getReturn_msg()).build();
 
 	}
+	
+	@POST
+	@Path("/uploadProductionInfo")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	public ReturnData<ProductionInfo> uploadProductionInfo(@FormDataParam("filepath") InputStream uploadedInputStream,
+			@FormDataParam("filepath") FormDataContentDisposition fileDetail) {
+
+		return excelServiceImpl.uploadProductionInfo(fileDetail.getFileName(),
+				uploadedInputStream);
+
+	}
+	
+	@GET
+	@Path("/getLoadinfoForTest")
+	@Produces(MediaType.APPLICATION_JSON)
+	public ReturnData<UnLoadingInfo> getLoadinfoForTest() {
+		ReqInfo reqInfo = new ReqInfo();
+		reqInfo.setDate("2016-08-25");
+		return unloadingInfoServiceImpl.getUnLoadingInfoByDate(reqInfo);
+	}
+	
 
 	@GET
 	@Path("/reqUserList")
@@ -155,63 +214,4 @@ public class UserResource {
 		//return userServiceImpl.createUser(adduser);
 	}
 
-	// /**
-	// * 增加
-	// * @param user
-	// */
-	// @POST
-	// @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-	// public void createUser(User user) {
-	// userServiceImpl.createUser(user);
-	// }
-	//
-	// /**
-	// * 删除
-	// * @param id
-	// */
-	// @DELETE
-	// @Path("{id}")
-	// public void deleteUser(@PathParam("id")String id){
-	// userServiceImpl.deleteUserById(id);
-	// }
-	//
-	// /**
-	// * 修改
-	// * @param user
-	// */
-	// @PUT
-	// @Consumes(MediaType.APPLICATION_XML)
-	// public void updateUser(User user){
-	// userServiceImpl.updateUser(user);
-	// }
-	//
-	// /**
-	// * 根据id查询
-	// * @param id
-	// * @return
-	// */
-	// @GET
-	// @Path("{id}")
-	// @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-	// public User getUserById(@PathParam("id") String id){
-	// System.out.println("getUserByName:"+id);
-	// User u = userServiceImpl.getUserByName(id);
-	// return u;
-	// }
-	//
-	// /**
-	// * 查询所有
-	// * @return
-	// */
-	// @GET
-	// @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-	// public ReturnData getAllUsers(){
-	// List<User> users = new ArrayList<User>();
-	// users = userServiceImpl.getAllUsers();
-	// ReturnData returnData = new ReturnData();
-	// returnData.setReturn_code("111");
-	// returnData.setReturn_msg("22");
-	// returnData.setData(users);
-	// return returnData;
-	// }
 }

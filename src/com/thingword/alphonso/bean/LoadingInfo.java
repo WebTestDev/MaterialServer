@@ -16,7 +16,6 @@ public class LoadingInfo {
     private String cInvStd;
     private String cInvName;
     private String cInvCode;
-    
 	public Date getDate() {
 		return date;
 	}
@@ -60,4 +59,5 @@ public class LoadingInfo {
 	public void setId(int id) {
 		Id = id;
 	}
+
 }

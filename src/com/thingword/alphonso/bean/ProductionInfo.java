@@ -24,6 +24,7 @@ public class ProductionInfo {
 	public int getId() {
 		return Id;
 	}
+	@JsonIgnore
 	public void setId(int id) {
 		Id = id;
 	}

@@ -8,5 +8,7 @@ import com.thingword.alphonso.bean.UnLoadingInfo;
 
 public interface UnLoadingInfoDao {
 	public List<UnLoadingInfo> getUnLoadingInfoByDate(String Date,String person);  
+	
+	public List<UnLoadingInfo> getAllUnLoadingInfoByDate(String Date);  
 
 }

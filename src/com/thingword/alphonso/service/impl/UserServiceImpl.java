@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public boolean createUser(User user) {
-		return userDaoImpl.createUser(user);
+		return false;
 	}
 
 	@Override
@@ -142,10 +142,11 @@ public class UserServiceImpl implements UserService {
 			auth |= 8;
 		}
 		user.setAuthority(String.valueOf(auth));
-		if(userDaoImpl.createUser(user)){
+		String ID = userDaoImpl.createUser(user);
+		if(ID!=null){
 			List<String> inner = new ArrayList<>();
 			inner.add("<input type='checkbox' value='0'>");
-			inner.add(String.valueOf(123));
+			inner.add(ID);
 			inner.add("无");
 			inner.add("无");
 			inner.add(user.getUsername());
@@ -188,7 +189,7 @@ public class UserServiceImpl implements UserService {
 		if(userDaoImpl.updateUser(user)){
 			List<String> inner = new ArrayList<>();
 			inner.add("<input type='checkbox' value='0'>");
-			inner.add(String.valueOf(123));
+			inner.add(String.valueOf(user.getUserID()));
 			inner.add("无");
 			inner.add("无");
 			inner.add(user.getUsername());

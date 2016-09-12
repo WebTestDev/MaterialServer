@@ -63,11 +63,10 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	@Override
-	public boolean createUser(User user) {
+	public String createUser(User user) {
 		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
 		Session s = null;
 		Transaction t = null;
-		boolean flag = false;
 		try {
 			// System.out.println(user.getUserId()+" "+user.getUserName()+"
 			// "+user.getAge());
@@ -75,14 +74,14 @@ public class UserDaoImpl implements UserDao {
 			t = s.beginTransaction();
 			s.save(user);
 			t.commit();
-			flag = true;
+			System.out.println("userID:"+user.getUserID());
 		} catch (Exception err) {
 			t.rollback();
 			err.printStackTrace();
 		} finally {
 			s.close();
 		}
-		return flag;
+		return String.valueOf(user.getUserID());
 	}
 
 	@Override
