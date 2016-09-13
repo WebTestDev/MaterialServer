@@ -341,7 +341,7 @@ function fileloadon() {
 function fileloadon2() {
         $("#_fileForm2").ajaxSubmit({
             type: "post",
-            url: "/TestServer/rest/materail/uploadProductionInfo",
+            url: "/TestServer/rest/materail/uploadProductionInfoOfWorkshop1",
             success: function (backdata) {
                 console.log(backdata);
                 if(backdata.return_code == "fail"){

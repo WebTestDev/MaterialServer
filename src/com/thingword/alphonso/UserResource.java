@@ -157,14 +157,23 @@ public class UserResource {
 	}
 	
 	@POST
-	@Path("/uploadProductionInfo")
+	@Path("/uploadProductionInfoOfWorkshop2")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	public ReturnData<ProductionInfo> uploadProductionInfo(@FormDataParam("filepath") InputStream uploadedInputStream,
+	public ReturnData<ProductionInfo> uploadProductionInfoOfWorkshop2(@FormDataParam("filepath") InputStream uploadedInputStream,
 			@FormDataParam("filepath") FormDataContentDisposition fileDetail) {
 
-		return excelServiceImpl.uploadProductionInfo(fileDetail.getFileName(),
+		return excelServiceImpl.uploadProductionInfoOfWorkShop2(fileDetail.getFileName(),
 				uploadedInputStream);
+	}
+	
+	@POST
+	@Path("/uploadProductionInfoOfWorkshop1")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	public ReturnData<ProductionInfo> uploadProductionInfoOfWorkshop1(@FormDataParam("filepath") InputStream uploadedInputStream,
+			@FormDataParam("filepath") FormDataContentDisposition fileDetail) {
 
+		return excelServiceImpl.uploadProductionInfoOfWorkshop1(fileDetail.getFileName(),
+				uploadedInputStream);
 	}
 	
 	@GET

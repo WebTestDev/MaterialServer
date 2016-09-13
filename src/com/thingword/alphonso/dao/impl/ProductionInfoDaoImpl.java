@@ -16,12 +16,12 @@ import com.thingword.alphonso.util.HibernateUtil;
 public class ProductionInfoDaoImpl implements ProductionInfoDao {
 
 	@Override
-	public boolean updateProductionInfoList(List<ProductionInfo> ls, String date) {
+	public boolean updateProductionInfoList(List<ProductionInfo> ls, String date,String workshop) {
 		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
 		Session s = null;
 		Transaction t = null;
 		boolean flag = false;
-		deleteByDate(date);
+		deleteByDateAndWorkShop(date,workshop);
 		try {
 			s = sessionFactory.openSession();
 			t = s.beginTransaction();
@@ -48,6 +48,29 @@ public class ProductionInfoDaoImpl implements ProductionInfoDao {
 			s = sessionFactory.openSession();
 			t = s.beginTransaction();
 			String hql = "delete from ProductionInfo where date = '" + Date + "'";
+			s.createQuery(hql).executeUpdate();
+			t.commit();
+			flag = true;
+		} catch (Exception err) {
+			t.rollback();
+			err.printStackTrace();
+		} finally {
+			s.close();
+		}
+		return flag;
+	}
+
+	@Override
+	public boolean deleteByDateAndWorkShop(String Date, String workshop) {
+		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+		Session s = null;
+		Transaction t = null;
+		boolean flag = false;
+		try {
+			s = sessionFactory.openSession();
+			t = s.beginTransaction();
+			String hql = "delete from ProductionInfo where date = '" + Date + "'" + "and workshop = '" + workshop + "'";
+			System.out.println(hql);
 			s.createQuery(hql).executeUpdate();
 			t.commit();
 			flag = true;
