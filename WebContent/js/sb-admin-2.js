@@ -56,7 +56,7 @@ $(function() {
 $(document).ready(function() {
     $('#dataTables-example').DataTable({
         "ajax" : "/TestServer/rest/materail/reqUserList",
-        responsive : true,
+        "responsive" : true,
         "language" : {
             "url" : "Chinese.json"
         }
@@ -262,7 +262,6 @@ $(document).ready(function() {
 
 
 function fileloadon() {
-    // $("#_fileForm").submit(function () {
         $("#_fileForm").ajaxSubmit({
             type: "post",
             url: "/TestServer/rest/materail/uploadProductionInfoForStore",
@@ -270,147 +269,43 @@ function fileloadon() {
                 if(backdata.return_code == "fail"){
                     $("#ifos").html(backdata.return_msg);
                     $('#myModal4').modal();
-                    $('#dataTables-account').DataTable({
-                        "data" : [],
-                        "bDestroy":true,
-                        responsive : true,
-                        "language" : {
-                            "url" : "Chinese.json"
-                        },
-                        "columns": [
-                            { "data": "shopnum" },
-                            { "data": "cInvCode" },
-                            { "data": "cInvName" },
-                            { "data": "cInvStd" },
-                            { "data": "iQuantity" },
-                            { "data": "cInvDefine8" },
-                            { "data": "cBatch" },
-                            { "data": "executor" }
-                        ]
-                    });
                 }
                 if(backdata.return_code == "success")
                 {
-                    $('#dataTables-account').DataTable({
-                        "data" : backdata.data,
-                        "bDestroy":true,
-                        responsive : true,
-                        "language" : {
-                            "url" : "Chinese.json"
-                        },
-                        "columns": [
-                            { "data": "shopnum" },
-                            { "data": "cInvCode" },
-                            { "data": "cInvName" },
-                            { "data": "cInvStd" },
-                            { "data": "iQuantity" },
-                            { "data": "cInvDefine8" },
-                            { "data": "cBatch" },
-                            { "data": "executor" }
-                        ]
-                    });
+                    $("#ifos").html("上传成功！");
+                    $('#myModal4').modal();
                 }
             },
             error: function (msg) {
                 $("#ifos").html("文件上传失败!");
                 $('#myModal4').modal();
-                $('#dataTables-account').DataTable({
-                    "data" : [],
-                    "bDestroy":true,
-                    responsive : true,
-                    "language" : {
-                        "url" : "Chinese.json"
-                    },
-                    "columns": [
-                        { "data": "shopnum" },
-                        { "data": "cInvCode" },
-                        { "data": "cInvName" },
-                        { "data": "cInvStd" },
-                        { "data": "iQuantity" },
-                        { "data": "cInvDefine8" },
-                        { "data": "cBatch" },
-                        { "data": "executor" }
-                    ]
-                });
             }
         });
-        // return false;
-    // });
-    // $("#_fileForm").submit();
+        $(".name").hide();
+        $("input[type='file']").val("");
 }
 function fileloadon2() {
         $("#_fileForm2").ajaxSubmit({
             type: "post",
-            url: "/TestServer/rest/materail/uploadProductionInfoOfWorkshop1",
+            url: "/TestServer/rest/materail/uploadProductionInfoOfWorkshop2",
             success: function (backdata) {
                 console.log(backdata);
                 if(backdata.return_code == "fail"){
-                    $('#dataTables-product').DataTable({
-                        "data" : [],
-                        "bDestroy":true,
-                        responsive : true,
-                        "language" : {
-                            "url" : "Chinese.json"
-                        },
-                        "columns": [
-                            { "data": "workshop" },
-                            { "data": "productline" },
-                            { "data": "tasknumber" },
-                            { "data": "productcode" },
-                            { "data": "spec" },
-                            { "data": "schedulednum" },
-                            { "data": "dailynum" },
-                            { "data": "date" },
-                            { "data": "remark" }
-                        ]
-                    });
+                    $("#ifos").html(backdata.return_msg);
+                    $('#myModal4').modal();
                 }
                 if(backdata.return_code == "success"){
-                    $('#dataTables-product').DataTable({
-                        "data" :  backdata.data,
-                        "bDestroy":true,
-                        responsive : true,
-                        "language" : {
-                            "url" : "Chinese.json"
-                        },
-                        "columns": [
-                            { "data": "workshop" },
-                            { "data": "productline" },
-                            { "data": "tasknumber" },
-                            { "data": "productcode" },
-                            { "data": "spec" },
-                            { "data": "schedulednum" },
-                            { "data": "dailynum" },
-                            { "data": "date" },
-                            { "data": "remark" }
-                        ]
-                    });
+                    $("#ifos").html("上传成功！");
+                    $('#myModal4').modal();
                 }
             },
             error: function (msg) {
                 $("#ifos").html("文件上传失败!");
                 $('#myModal4').modal();
-                $('#dataTables-product').DataTable({
-                    "data" : [],
-                    "bDestroy":true,
-                    responsive : true,
-                    "language" : {
-                        "url" : "Chinese.json"
-                    },
-                    "columns": [
-                        { "data": "workshop" },
-                        { "data": "productline" },
-                        { "data": "tasknumber" },
-                        { "data": "productcode" },
-                        { "data": "spec" },
-                        { "data": "schedulednum" },
-                        { "data": "dailynum" },
-                        { "data": "date" },
-                        { "data": "remark" }
-                    ]
-                });
             }
         });
+        $(".name").hide();
+        $("input[type='file']").val("");
 }
 $(document).ready(function() {
     $(".file").on("change","input[type='file']",function(){
@@ -422,3 +317,247 @@ $(document).ready(function() {
     });
 })
 
+!function(){
+    laydate.skin('molv');//切换皮肤，请查看skins下面皮肤库
+    laydate({elem: '#date-product'});//绑定元素
+    laydate({elem: '#date-gallery'});//绑定元素
+    $("#datebutton-product").on("click",function(){
+        console.log($("#date-product").val());
+        if($("#date-product").val()){
+            $.ajax({
+                "url" : "/TestServer/rest/materail/reqProductionInfo",
+                "data" : JSON.stringify({
+                    "date":$("#date-product").val()}
+                ),
+                "type" : "post",
+                "contentType" : "application/json",
+                "dataType" : "json",
+                success : function(backdata) {
+                    console.log(backdata);
+                if(backdata.return_code == "fail"){
+                    $("#ifos").html(backdata.return_msg);
+                    $('#myModal4').modal();
+                    $('#dataTables-product').DataTable({
+                        "data" :  [],
+                        "bDestroy":true,
+                        "responsive" : true,
+                        "language" : {
+                            "url" : "Chinese.json"
+                        },
+                        "columns": [
+                            { "data": "workshop" },
+                            { "data": "productline" },
+                            { "data": "tasknumber" },
+                            { "data": "productcode" },
+                            { "data": "spec" },
+                            { "data": "schedulednum" },
+                            { "data": "dailynum" },
+                            { "data": "date" },
+                            { "data": "remark" }
+                        ]
+                    });
+                }
+                if(backdata.return_code == "success")
+                {
+                    $('#dataTables-product').DataTable({
+                        "data" :  backdata.data,
+                        "bDestroy":true,
+                        "responsive" : true,
+                        "language" : {
+                            "url" : "Chinese.json"
+                        },
+                        "columns": [
+                            { "data": "workshop" },
+                            { "data": "productline" },
+                            { "data": "tasknumber" },
+                            { "data": "productcode" },
+                            { "data": "spec" },
+                            { "data": "schedulednum" },
+                            { "data": "dailynum" },
+                            { "data": "date" },
+                            { "data": "remark" }
+                        ]
+                    });
+                }
+                },
+                error : function(error) {
+                    console.log(error);
+                    $("#ifos").html("出错了!");
+                    $('#myModal4').modal();
+                    $('#dataTables-product').DataTable({
+                        "data" :  [],
+                        "bDestroy":true,
+                        "responsive" : true,
+                        "language" : {
+                            "url" : "Chinese.json"
+                        },
+                        "columns": [
+                            { "data": "workshop" },
+                            { "data": "productline" },
+                            { "data": "tasknumber" },
+                            { "data": "productcode" },
+                            { "data": "spec" },
+                            { "data": "schedulednum" },
+                            { "data": "dailynum" },
+                            { "data": "date" },
+                            { "data": "remark" }
+                        ]
+                    });
+                }
+            });
+        }
+        else{
+            $("#ifos").html("请选择日期!");
+            $('#myModal4').modal();
+        };
+    });
+    $("#datebutton-gallery").on("click",function(){
+        if($("#date-gallery").val()){
+            $.ajax({
+                "url" : "",
+                "data" : JSON.stringify({
+                    "data":$("#date-gallery").val()}
+                ),
+                "type" : "post",
+                "contentType" : "application/json",
+                "dataType" : "json",
+                success : function(backdata) {
+                    console.log(backdata);
+                if(backdata.return_code == "fail"){
+                    $("#ifos").html(backdata.return_msg);
+                    $('#myModal4').modal();
+                    $('#dataTables-gallery').DataTable({
+                        "data" :  [],
+                        "bDestroy":true,
+                        "responsive" : true,
+                        "language" : {
+                            "url" : "Chinese.json"
+                        },
+                        "columns": [
+                            { "data": "workshop" },
+                            { "data": "productline" },
+                            { "data": "tasknumber" },
+                            { "data": "productcode" },
+                            { "data": "spec" },
+                            { "data": "schedulednum" },
+                            { "data": "dailynum" },
+                            { "data": "date" },
+                            { "data": "remark" }
+                        ]
+                    });
+                }
+                if(backdata.return_code == "success")
+                {
+                    $('#dataTables-gallery').DataTable({
+                        "data" :  backdata.data,
+                        "bDestroy":true,
+                        "responsive" : true,
+                        "language" : {
+                            "url" : "Chinese.json"
+                        },
+                        "columns": [
+                            { "data": "workshop" },
+                            { "data": "productline" },
+                            { "data": "tasknumber" },
+                            { "data": "productcode" },
+                            { "data": "spec" },
+                            { "data": "schedulednum" },
+                            { "data": "dailynum" },
+                            { "data": "date" },
+                            { "data": "remark" }
+                        ]
+                    });
+                }
+                },
+                error : function(error) {
+                    console.log(error);
+                    $("#ifos").html("出错了!");
+                    $('#myModal4').modal();
+                    $('#dataTables-product').DataTable({
+                        "data" :  [],
+                        "bDestroy":true,
+                        "responsive" : true,
+                        "language" : {
+                            "url" : "Chinese.json"
+                        },
+                        "columns": [
+                            { "data": "workshop" },
+                            { "data": "productline" },
+                            { "data": "tasknumber" },
+                            { "data": "productcode" },
+                            { "data": "spec" },
+                            { "data": "schedulednum" },
+                            { "data": "dailynum" },
+                            { "data": "date" },
+                            { "data": "remark" }
+                        ]
+                    });
+                }
+            });
+        }
+        else{
+            $("#ifos").html("请选择日期!");
+            $('#myModal4').modal();
+        };
+    })
+}();
+
+$(document).ready(function(){
+    $("#person").on("click",function(){
+        var table = $('#dataTables-keeper').DataTable({
+           "ajax": "data1.json",
+           "bDestroy":true,
+           "responsive" : true,
+           "columns": [
+               { "data": "storekeeper", "title":"storekeeper","defaultContent":""},
+               { "data": "identifier", "title":"identifier","defaultContent":""},
+               { "data": "spec", "title":"spec","defaultContent":""},
+               { "data": "loaction", "title":"loaction","defaultContent":""},
+               { "data": "matetialname", "title":"matetialname","defaultContent":""},
+               { "data": "matetialnumber", "title":"matetialnumber","defaultContent":""},
+               { "data": "repository", "title":"repository","defaultContent":""},
+               { "data": null, "title":"操作","defaultContent": "<button class='edit-btn btn btn-primary' type='button'>编辑</button>"}
+           ],
+           "language" : {
+                "url" : "Chinese.json"
+            }
+       });
+        $("#dataTables-keeper tbody").on("click",".edit-btn",function(){
+            var tds=$(this).parents("tr").children().first();
+            var jqob=$(tds);
+            var txt=jqob.text();
+            var put=$("<input type='text'>");
+            put.val(txt);
+            jqob.html(put);
+           $(this).html("保存");
+           $(this).toggleClass("edit-btn");
+           $(this).toggleClass("save-btn");
+        });
+        $("#dataTables-keeper tbody").on("click",".save-btn",function(){
+           var row=table.row($(this).parents("tr"));
+           var tds=$(this).parents("tr").children().first();
+           var jqob=$(tds);
+           var txt=jqob.children("input").val();
+           jqob.html(txt);
+           table.cell(jqob).data(txt);//修改DataTables对象的数据
+            var data=row.data();
+            console.log(data);
+            $.ajax({
+                "url":"data1.json",
+                "data" : JSON.stringify(data),
+                "type" : "post",
+                "contentType" : "application/json",
+                "dataType" : "json",
+                "error":function(){
+                    alert("服务器未正常响应，请重试");
+                },
+                "success":function(response){
+                    alert("修改成功");
+                }
+            });
+           $(this).html("编辑");
+           $(this).toggleClass("edit-btn");
+           $(this).toggleClass("save-btn");
+       });
+    });
+})

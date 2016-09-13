@@ -1,14 +1,13 @@
 {
 	"data":[
 		{
-			"shopnum":"C8",
-			"cInvCode":"17050067:",
-			"cInvName":"cInvName",
-			"cInvStd":"cInvStd",
-			"iQuantity":"100",
-			"cInvDefine8":"Y-12-A-2-5锛孻-11-A",
-			"cBatch":"171500670116082500",
-			"storekeeper":"12"
+			"storekeeper":"12",
+			"identifier":"12",
+			"spec":"12",
+			"loaction":"12",
+			"matetialname":"12",
+			"matetialnumber":"12",
+			"repository":"12"
 		}
 	]
 }

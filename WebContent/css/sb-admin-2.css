@@ -155,6 +155,9 @@ body {
 #myModal2{
   z-index: 100001;
 }
+#myModal2{
+  z-index: 100001;
+}
 #idnum{
   display: none;
 }
@@ -247,4 +250,7 @@ body {
     text-decoration: none;
     text-indent: 0;
     line-height: 20px;
+}
+#person{
+  margin:10px;
 }

@@ -198,37 +198,36 @@ public class ExcelServiceImpl implements ExcelService {
 
 	@Override
 	public ReturnData<UnLoadingInfo> uploadProductionInfoStore(String name, InputStream inputStream) {
-//		ReturnData<UnLoadingInfo> returnData = new ReturnData<>();
-//
-//		String date = parseFileNameWorkShop2(name);
-//		if (date == null) {
-//			returnData.setReturn_msg("文件名错误");
-//			returnData.setReturn_code(MESSAGE.RETURN_FAIL);
-//			return returnData;
-//		}
-//
-//		// 解析excel数据并保存到数据库
-//		List<ProductionInfo> ls = parseProductionLine2(date, inputStream);
-//		if (ls.isEmpty()) {
-//			returnData.setReturn_msg("文件内容解析出错");
-//			returnData.setReturn_code(MESSAGE.RETURN_FAIL);
-//			return returnData;
-//		}
-//		productionInfoDaoImpl.updateProductionInfoList(ls, date);
-//		
-//		{
-//			//生成当天的unloadinfo并保存到数据可以
-//			//1. 根据生产产品的ID查找所需要meterial ID；
-//			//2. 根据metrailID 查找storekeeper数据库 绑定 保管员
-//			//3.保存到unloadinfo数据库；
-//			returnData.setReturn_msg("文件上传成功");
-//			returnData.setReturn_code(MESSAGE.RETURN_SUCCESS);
-//			List<UnLoadingInfo> lsa = unloadingInfoDaoImpl.getAllUnLoadingInfoByDate("2016-08-25");
-//			returnData.setData(lsa);
-//		}
-//
-//		return returnData;
-		return null;
+		ReturnData<UnLoadingInfo> returnData = new ReturnData<>();
+
+		String date = parseFileNameWorkShop2(name);
+		if (date == null) {
+			returnData.setReturn_msg("文件名错误");
+			returnData.setReturn_code(MESSAGE.RETURN_FAIL);
+			return returnData;
+		}
+
+		// 解析excel数据并保存到数据库
+		List<ProductionInfo> ls = parseProductionLine2(date, inputStream);
+		if (ls.isEmpty()) {
+			returnData.setReturn_msg("文件内容解析出错");
+			returnData.setReturn_code(MESSAGE.RETURN_FAIL);
+			return returnData;
+		}
+		productionInfoDaoImpl.updateProductionInfoList(ls, date,WORKSHOP.WORKSHOP2);
+		
+		{
+			//生成当天的unloadinfo并保存到数据可以
+			//1. 根据生产产品的ID查找所需要meterial ID；
+			//2. 根据metrailID 查找storekeeper数据库 绑定 保管员
+			//3.保存到unloadinfo数据库；
+			returnData.setReturn_msg("文件上传成功");
+			returnData.setReturn_code(MESSAGE.RETURN_SUCCESS);
+			List<UnLoadingInfo> lsa = unloadingInfoDaoImpl.getAllUnLoadingInfoByDate("2016-08-25");
+			returnData.setData(lsa);
+		}
+
+		return returnData;
 	}
 	
 	@Override
