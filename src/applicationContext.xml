@@ -24,13 +24,16 @@
 		class="com.thingword.alphonso.service.impl.DistriInfoServiceImpl" />
 	<bean id="DistriInfoDaoImpl" class="com.thingword.alphonso.dao.impl.DistriInfoDaoImpl" />
 
-	<bean id="ExcelServiceImpl" class="com.thingword.alphonso.service.impl.ExcelServiceImpl" />	
-	<bean id="ProductionInfoServiceImpl" class="com.thingword.alphonso.service.impl.ProductionInfoServiceImpl" />
+	<bean id="ExcelServiceImpl" class="com.thingword.alphonso.service.impl.ExcelServiceImpl" />
+	<bean id="ProductionInfoServiceImpl"
+		class="com.thingword.alphonso.service.impl.ProductionInfoServiceImpl" />
 	<bean id="ProductionInfoDaoImpl" class="com.thingword.alphonso.dao.impl.ProductionInfoDaoImpl" />
 
 
-	<bean id="UserTestServiceImpl"
-		class="com.thingword.alphonso.service.impl.UserTestServiceImpl" />
+	<bean id="UserTestServiceImpl" class="com.thingword.alphonso.service.impl.UserTestServiceImpl" />
 	<bean id="UserTestDaoImpl" class="com.thingword.alphonso.dao.impl.UserTestDaoImpl" />
+
+	<bean id="StoreKeeperServiceImpl" class="com.thingword.alphonso.service.impl.StoreKeeperServiceImpl" />
+	<bean id="StoreKeeperDaoImpl" class="com.thingword.alphonso.dao.impl.StoreKeeperDaoImpl" />
 
 </beans>

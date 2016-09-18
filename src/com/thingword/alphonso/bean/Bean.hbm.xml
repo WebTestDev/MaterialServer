@@ -75,4 +75,17 @@
 		<property name="boardcode" type="string" />
 	</class>
 
+	<class name="StoreKeeper" table="storekeeper">
+		<id name="Id" column="Id" type="int">
+			<generator class="increment" />
+		</id>
+		<property name="storekeeper" type="string" />
+		<property name="identifier" type="string" />
+		<property name="spec" type="string" />
+		<property name="location" type="string" />
+		<property name="materialname" type="string" />
+		<property name="materialnumber" type="string" />
+		<property name="repository" type="string" />
+	</class>
+
 </hibernate-mapping>

@@ -32,16 +32,19 @@ import com.thingword.alphonso.Configure.ReturnUserList;
 import com.thingword.alphonso.bean.DistributionInfo;
 import com.thingword.alphonso.bean.LoadingInfo;
 import com.thingword.alphonso.bean.ProductionInfo;
+import com.thingword.alphonso.bean.StoreKeeper;
 import com.thingword.alphonso.bean.UnLoadingInfo;
 import com.thingword.alphonso.bean.User;
 import com.thingword.alphonso.dao.LoadingInfoDao;
 import com.thingword.alphonso.dao.impl.LoadingInfoDaoImpl;
 import com.thingword.alphonso.service.LoadingInfoService;
 import com.thingword.alphonso.service.ProductionInfoService;
+import com.thingword.alphonso.service.StoreKeeperService;
 import com.thingword.alphonso.service.impl.DistriInfoServiceImpl;
 import com.thingword.alphonso.service.impl.ExcelServiceImpl;
 import com.thingword.alphonso.service.impl.LoadingInfoServiceImpl;
 import com.thingword.alphonso.service.impl.ProductionInfoServiceImpl;
+import com.thingword.alphonso.service.impl.StoreKeeperServiceImpl;
 import com.thingword.alphonso.service.impl.UnLoadingInfoServiceImpl;
 import com.thingword.alphonso.service.impl.UserServiceImpl;
 import com.thingword.alphonso.service.impl.UserTestServiceImpl;
@@ -77,6 +80,9 @@ public class UserResource {
 	
 	@Autowired
 	private UserTestServiceImpl userTestServiceImpl;
+	
+	@Autowired
+	private StoreKeeperServiceImpl storeKeeperServiceImpl;
 
 	public UserResource() {
 		LOGGER.fine("UserResource()");
@@ -106,6 +112,13 @@ public class UserResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public ReturnData<UnLoadingInfo> reqUnLoadingInfo(ReqInfo reqInfo) {
 		return unloadingInfoServiceImpl.getUnLoadingInfoByDate(reqInfo);
+	}
+	
+	@GET
+	@Path("/reqStorekeeperInfo")
+	@Produces(MediaType.APPLICATION_JSON)
+	public ReturnData<StoreKeeper> reqStorekeeperInfo() {
+		return storeKeeperServiceImpl.getStoreKeeperList();
 	}
 	
 	@POST

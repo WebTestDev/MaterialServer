@@ -414,9 +414,9 @@ $(document).ready(function() {
     $("#datebutton-gallery").on("click",function(){
         if($("#date-gallery").val()){
             $.ajax({
-                "url" : "",
+                "url" : "/TestServer/rest/materail/reqUnLoadingInfo",
                 "data" : JSON.stringify({
-                    "data":$("#date-gallery").val()}
+                    "date":$("#date-gallery").val()}
                 ),
                 "type" : "post",
                 "contentType" : "application/json",
@@ -434,15 +434,14 @@ $(document).ready(function() {
                             "url" : "Chinese.json"
                         },
                         "columns": [
-                            { "data": "workshop" },
-                            { "data": "productline" },
-                            { "data": "tasknumber" },
-                            { "data": "productcode" },
-                            { "data": "spec" },
-                            { "data": "schedulednum" },
-                            { "data": "dailynum" },
-                            { "data": "date" },
-                            { "data": "remark" }
+                            { "data": "shopnum" },
+                            { "data": "cInvCode" },
+                            { "data": "cInvName" },
+                            { "data": "cInvStd" },
+                            { "data": "iQuantity" },
+                            { "data": "cInvDefine8" },
+                            { "data": "cBatch" },
+                            { "data": "executor" }
                         ]
                     });
                 }
@@ -456,15 +455,14 @@ $(document).ready(function() {
                             "url" : "Chinese.json"
                         },
                         "columns": [
-                            { "data": "workshop" },
-                            { "data": "productline" },
-                            { "data": "tasknumber" },
-                            { "data": "productcode" },
-                            { "data": "spec" },
-                            { "data": "schedulednum" },
-                            { "data": "dailynum" },
-                            { "data": "date" },
-                            { "data": "remark" }
+                            { "data": "shopnum" },
+                            { "data": "cInvCode" },
+                            { "data": "cInvName" },
+                            { "data": "cInvStd" },
+                            { "data": "iQuantity" },
+                            { "data": "cInvDefine8" },
+                            { "data": "cBatch" },
+                            { "data": "executor" }
                         ]
                     });
                 }
@@ -481,15 +479,14 @@ $(document).ready(function() {
                             "url" : "Chinese.json"
                         },
                         "columns": [
-                            { "data": "workshop" },
-                            { "data": "productline" },
-                            { "data": "tasknumber" },
-                            { "data": "productcode" },
-                            { "data": "spec" },
-                            { "data": "schedulednum" },
-                            { "data": "dailynum" },
-                            { "data": "date" },
-                            { "data": "remark" }
+                            { "data": "shopnum" },
+                            { "data": "cInvCode" },
+                            { "data": "cInvName" },
+                            { "data": "cInvStd" },
+                            { "data": "iQuantity" },
+                            { "data": "cInvDefine8" },
+                            { "data": "cBatch" },
+                            { "data": "executor" }
                         ]
                     });
                 }
@@ -505,59 +502,59 @@ $(document).ready(function() {
 $(document).ready(function(){
     $("#person").on("click",function(){
         var table = $('#dataTables-keeper').DataTable({
-           "ajax": "data1.json",
+           "ajax": "/TestServer/rest/materail/reqStorekeeperInfo",
            "bDestroy":true,
            "responsive" : true,
            "columns": [
-               { "data": "storekeeper", "title":"storekeeper","defaultContent":""},
-               { "data": "identifier", "title":"identifier","defaultContent":""},
-               { "data": "spec", "title":"spec","defaultContent":""},
-               { "data": "loaction", "title":"loaction","defaultContent":""},
-               { "data": "matetialname", "title":"matetialname","defaultContent":""},
-               { "data": "matetialnumber", "title":"matetialnumber","defaultContent":""},
-               { "data": "repository", "title":"repository","defaultContent":""},
-               { "data": null, "title":"操作","defaultContent": "<button class='edit-btn btn btn-primary' type='button'>编辑</button>"}
+               { "data": "storekeeper", "title":"仓管员","defaultContent":""},
+               { "data": "identifier", "title":"编号","defaultContent":""},
+               { "data": "spec", "title":"规格","defaultContent":""},
+               { "data": "location", "title":"位置","defaultContent":""},
+               { "data": "materialname", "title":"物料名称","defaultContent":""},
+               { "data": "materialnumber", "title":"物料编码","defaultContent":""},
+               { "data": "repository", "title":"仓库名称","defaultContent":""}
+//               { "data": null, "title":"操作","defaultContent": "<button class='edit-btn btn btn-primary' type='button'>编辑</button>"}
            ],
            "language" : {
                 "url" : "Chinese.json"
             }
        });
-        $("#dataTables-keeper tbody").on("click",".edit-btn",function(){
-            var tds=$(this).parents("tr").children().first();
-            var jqob=$(tds);
-            var txt=jqob.text();
-            var put=$("<input type='text'>");
-            put.val(txt);
-            jqob.html(put);
-           $(this).html("保存");
-           $(this).toggleClass("edit-btn");
-           $(this).toggleClass("save-btn");
-        });
-        $("#dataTables-keeper tbody").on("click",".save-btn",function(){
-           var row=table.row($(this).parents("tr"));
-           var tds=$(this).parents("tr").children().first();
-           var jqob=$(tds);
-           var txt=jqob.children("input").val();
-           jqob.html(txt);
-           table.cell(jqob).data(txt);//修改DataTables对象的数据
-            var data=row.data();
-            console.log(data);
-            $.ajax({
-                "url":"data1.json",
-                "data" : JSON.stringify(data),
-                "type" : "post",
-                "contentType" : "application/json",
-                "dataType" : "json",
-                "error":function(){
-                    alert("服务器未正常响应，请重试");
-                },
-                "success":function(response){
-                    alert("修改成功");
-                }
-            });
-           $(this).html("编辑");
-           $(this).toggleClass("edit-btn");
-           $(this).toggleClass("save-btn");
-       });
+//        $("#dataTables-keeper tbody").on("click",".edit-btn",function(){
+//            var tds=$(this).parents("tr").children().first();
+//            var jqob=$(tds);
+//            var txt=jqob.text();
+//            var put=$("<input type='text'>");
+//            put.val(txt);
+//            jqob.html(put);
+//           $(this).html("保存");
+//           $(this).toggleClass("edit-btn");
+//           $(this).toggleClass("save-btn");
+//        });
+//        $("#dataTables-keeper tbody").on("click",".save-btn",function(){
+//           var row=table.row($(this).parents("tr"));
+//           var tds=$(this).parents("tr").children().first();
+//           var jqob=$(tds);
+//           var txt=jqob.children("input").val();
+//           jqob.html(txt);
+//           table.cell(jqob).data(txt);//修改DataTables对象的数据
+//            var data=row.data();
+//            console.log(data);
+//            $.ajax({
+//                "url":"data1.json",
+//                "data" : JSON.stringify(data),
+//                "type" : "post",
+//                "contentType" : "application/json",
+//                "dataType" : "json",
+//                "error":function(){
+//                    alert("服务器未正常响应，请重试");
+//                },
+//                "success":function(response){
+//                    alert("修改成功");
+//                }
+//            });
+//           $(this).html("编辑");
+//           $(this).toggleClass("edit-btn");
+//           $(this).toggleClass("save-btn");
+//       });
     });
 })
