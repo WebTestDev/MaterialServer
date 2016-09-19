@@ -15,4 +15,6 @@ public interface ExcelService {
 	
 	public ReturnData<ProductionInfo> uploadProductionInfoOfWorkshop1(String naem,InputStream inputStream);
 	
+	public ReturnData<ProductionInfo> uploadProductionInfo(String naem,InputStream inputStream);
+	
 }

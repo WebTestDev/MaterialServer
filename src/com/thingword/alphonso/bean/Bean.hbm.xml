@@ -88,4 +88,22 @@
 		<property name="repository" type="string" />
 	</class>
 
+	<class name="StoreProductionInfo" table="storeproductioninfo">
+		<id name="Id" column="Id" type="int">
+			<generator class="increment" />
+		</id>
+		<property name="workshop" type="string" />
+		<property name="date" type="date" />
+		<property name="productline" type="string" />
+		<property name="tasknumber" type="string" />
+		<property name="productcode" type="string" />
+		<property name="spec" type="string" />
+		<property name="schedulednum" type="string" />
+		<property name="dailynum" type="string" />
+		<property name="remark" type="string" />
+		<property name="processflow" type="string" />
+		<property name="boardcode" type="string" />
+		<property name="uploadbatch" type="string" />
+	</class>
+
 </hibernate-mapping>

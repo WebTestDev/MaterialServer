@@ -20,6 +20,7 @@ import com.thingword.alphonso.Configure.ReturnMessage;
 import com.thingword.alphonso.Configure.WORKSHOP;
 import com.thingword.alphonso.bean.LoadingInfo;
 import com.thingword.alphonso.bean.ProductionInfo;
+import com.thingword.alphonso.bean.StoreProductionInfo;
 import com.thingword.alphonso.bean.UnLoadingInfo;
 import com.thingword.alphonso.dao.impl.ProductionInfoDaoImpl;
 import com.thingword.alphonso.dao.impl.UnLoadingInfoDaoImpl;
@@ -36,7 +37,7 @@ public class ExcelServiceImpl implements ExcelService {
 	@Autowired
 	private ProductionInfoDaoImpl productionInfoDaoImpl;
 	@Autowired
-    private UnLoadingInfoDaoImpl unloadingInfoDaoImpl;
+	private UnLoadingInfoDaoImpl unloadingInfoDaoImpl;
 
 	private String parseFileNameWorkShop2(String name) {
 		String val = null;
@@ -57,7 +58,40 @@ public class ExcelServiceImpl implements ExcelService {
 
 		return val;
 	}
-	
+
+	private String[] parseFileNameStore(String name) {
+		String[] val = null;
+
+		String regex = "\\D+-\\d{4}-\\d{1,2}-\\d{1,2}\\(\\d+\\).xls";
+		String regex_date = "\\d{4}-\\d{1,2}-\\d{1,2}";
+		String regex_batch = "\\(\\d+\\)";
+
+		Pattern p1 = Pattern.compile(regex);
+		Pattern p2 = Pattern.compile(regex_date);
+		Pattern p3 = Pattern.compile(regex_batch);
+		if (p1.matcher(name).matches()) {
+			Matcher matcher = p2.matcher(name);
+			if (matcher.find()) {
+				String date = matcher.group();
+				if (isValidDate(date)) {
+					val = new String[2];
+					val[0] = date;
+
+					Matcher matcher_batch = p3.matcher(name);
+					if (matcher_batch.find()) {
+						String batch = matcher_batch.group();
+						val[1] = batch.substring(1, batch.length()-1);
+						System.out.println(val[1]);
+					}
+				}
+
+			}
+
+		}
+
+		return val;
+	}
+
 	private String parseFileNameWorkShop1(String name) {
 		String val = null;
 
@@ -107,7 +141,7 @@ public class ExcelServiceImpl implements ExcelService {
 
 					val = sheet.getCell(index++, i).getContents();
 					productionInfo.setTasknumber(val);
-					
+
 					productionInfo.setWorkshop(WORKSHOP.WORKSHOP2);
 
 					val = sheet.getCell(index++, i).getContents();
@@ -133,11 +167,56 @@ public class ExcelServiceImpl implements ExcelService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 		return ls;
-
 	}
-	
+
+	private List<StoreProductionInfo> parseProductionLineStore(String date, String batch, InputStream inputStream) {
+		List<StoreProductionInfo> ls = new ArrayList<>();
+		Workbook workbook;
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd ");
+		try {
+			workbook = Workbook.getWorkbook(inputStream);
+			Sheet sheet = workbook.getSheet(0);
+			for (int i = 2; i < sheet.getRows(); i++) {
+				int index = 1;
+				Cell cell = sheet.getCell(index++, i);
+				String val = cell.getContents();
+				if (!val.isEmpty()) {
+					StoreProductionInfo productionInfo = new StoreProductionInfo();
+					productionInfo.setProductline(val);
+					productionInfo.setUploadbatch(batch);
+
+					val = sheet.getCell(index++, i).getContents();
+					productionInfo.setTasknumber(val);
+
+					productionInfo.setWorkshop(WORKSHOP.WORKSHOP2);
+
+					val = sheet.getCell(index++, i).getContents();
+					productionInfo.setProductcode(val);
+
+					val = sheet.getCell(index++, i).getContents();
+					productionInfo.setSpec(val);
+
+					val = sheet.getCell(index++, i).getContents();
+					productionInfo.setSchedulednum(val);
+
+					val = sheet.getCell(index++, i).getContents();
+					productionInfo.setDailynum(val);
+
+					val = sheet.getCell(index++, i).getContents();
+					productionInfo.setRemark(val);
+
+					productionInfo.setDate(Date.valueOf(date));
+					ls.add(productionInfo);
+				}
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return ls;
+	}
+
 	private List<ProductionInfo> parseProductionLine1(String date, InputStream inputStream) {
 		List<ProductionInfo> ls = new ArrayList<>();
 		Workbook workbook;
@@ -155,36 +234,36 @@ public class ExcelServiceImpl implements ExcelService {
 
 					productionInfo.setTasknumber(val);
 					productionInfo.setDate(Date.valueOf(date));
-					
+
 					val = sheet.getCell(index++, i).getContents();
 					productionInfo.setProductcode(val);
-					
+
 					index++;
-					
+
 					val = sheet.getCell(index++, i).getContents();
 					productionInfo.setSpec(val);
-					
+
 					val = sheet.getCell(index++, i).getContents();
 					productionInfo.setSchedulednum(val);
-					
+
 					val = sheet.getCell(index++, i).getContents();
 					productionInfo.setDailynum(val);
-					
+
 					val = sheet.getCell(index++, i).getContents();
 					productionInfo.setProductline(val);
-//					
-//					index = 10;
-//					
-//					val = sheet.getCell(index++, i).getContents();
-//					productionInfo.setRemark(val);
-//					
-//					val = sheet.getCell(index++, i).getContents();
-//					productionInfo.setProcessflow(val);
-//					
-//					val = sheet.getCell(index++, i).getContents();
-//					productionInfo.setBoardcode(val);
+					//
+					// index = 10;
+					//
+					// val = sheet.getCell(index++, i).getContents();
+					// productionInfo.setRemark(val);
+					//
+					// val = sheet.getCell(index++, i).getContents();
+					// productionInfo.setProcessflow(val);
+					//
+					// val = sheet.getCell(index++, i).getContents();
+					// productionInfo.setBoardcode(val);
 					ls.add(productionInfo);
-					
+
 				}
 			}
 		} catch (Exception e) {
@@ -200,39 +279,51 @@ public class ExcelServiceImpl implements ExcelService {
 	public ReturnData<UnLoadingInfo> uploadProductionInfoStore(String name, InputStream inputStream) {
 		ReturnData<UnLoadingInfo> returnData = new ReturnData<>();
 
-		String date = parseFileNameWorkShop2(name);
-		if (date == null) {
+		if (name == null) {
+			returnData.setReturn_msg("文件名错误");
+			returnData.setReturn_code(MESSAGE.RETURN_FAIL);
+			return returnData;
+		}
+		System.out.println("parseFileNameStore");
+		String[] val = parseFileNameStore(name);
+		if (val == null) {
 			returnData.setReturn_msg("文件名错误");
 			returnData.setReturn_code(MESSAGE.RETURN_FAIL);
 			return returnData;
 		}
 
 		// 解析excel数据并保存到数据库
-		List<ProductionInfo> ls = parseProductionLine2(date, inputStream);
+		List<StoreProductionInfo> ls = parseProductionLineStore(val[0], val[1], inputStream);
 		if (ls.isEmpty()) {
 			returnData.setReturn_msg("文件内容解析出错");
 			returnData.setReturn_code(MESSAGE.RETURN_FAIL);
 			return returnData;
 		}
-		productionInfoDaoImpl.updateProductionInfoList(ls, date,WORKSHOP.WORKSHOP2);
-		
+		productionInfoDaoImpl.updateStoreProductionInfoList(ls, val[0],val[1]);
+
 		{
-			//生成当天的unloadinfo并保存到数据可以
-			//1. 根据生产产品的ID查找所需要meterial ID；
-			//2. 根据metrailID 查找storekeeper数据库 绑定 保管员
-			//3.保存到unloadinfo数据库；
+			// 生成当天的unloadinfo并保存到数据可以
+			// 1. 根据生产产品的ID查找所需要meterial ID；
+			// 2. 根据metrailID 查找storekeeper数据库 绑定 保管员
+			// 3.保存到unloadinfo数据库；
 			returnData.setReturn_msg("文件上传成功");
 			returnData.setReturn_code(MESSAGE.RETURN_SUCCESS);
 			List<UnLoadingInfo> lsa = unloadingInfoDaoImpl.getAllUnLoadingInfoByDate("2016-08-25");
-			returnData.setData(lsa);
+			// returnData.setData(lsa);
 		}
 
 		return returnData;
 	}
-	
+
 	@Override
 	public ReturnData<ProductionInfo> uploadProductionInfoOfWorkShop2(String name, InputStream inputStream) {
 		ReturnData<ProductionInfo> returnData = new ReturnData<>();
+
+		if (name == null) {
+			returnData.setReturn_msg("文件名错误");
+			returnData.setReturn_code(MESSAGE.RETURN_FAIL);
+			return returnData;
+		}
 
 		String date = parseFileNameWorkShop2(name);
 		if (date == null) {
@@ -250,9 +341,9 @@ public class ExcelServiceImpl implements ExcelService {
 		}
 		returnData.setReturn_msg("文件上传成功");
 		returnData.setReturn_code(MESSAGE.RETURN_SUCCESS);
-		productionInfoDaoImpl.updateProductionInfoList(ls, date,WORKSHOP.WORKSHOP2);
-		
-		returnData.setData(ls);
+		productionInfoDaoImpl.updateProductionInfoList(ls, date, WORKSHOP.WORKSHOP2);
+
+		// returnData.setData(ls);
 
 		return returnData;
 	}
@@ -260,6 +351,12 @@ public class ExcelServiceImpl implements ExcelService {
 	@Override
 	public ReturnData<ProductionInfo> uploadProductionInfoOfWorkshop1(String name, InputStream inputStream) {
 		ReturnData<ProductionInfo> returnData = new ReturnData<>();
+
+		if (name == null) {
+			returnData.setReturn_msg("文件名错误");
+			returnData.setReturn_code(MESSAGE.RETURN_FAIL);
+			return returnData;
+		}
 
 		String date = parseFileNameWorkShop1(name);
 		if (date == null) {
@@ -277,9 +374,63 @@ public class ExcelServiceImpl implements ExcelService {
 		}
 		returnData.setReturn_msg("文件上传成功");
 		returnData.setReturn_code(MESSAGE.RETURN_SUCCESS);
-		productionInfoDaoImpl.updateProductionInfoList(ls, date,WORKSHOP.WORKSHOP1);
+		productionInfoDaoImpl.updateProductionInfoList(ls, date, WORKSHOP.WORKSHOP1);
+
+		// returnData.setData(ls);
+
+		return returnData;
+	}
+
+	@Override
+	public ReturnData<ProductionInfo> uploadProductionInfo(String name, InputStream inputStream) {
+		ReturnData<ProductionInfo> returnData = new ReturnData<>();
+		int workshop = 0;
+		if (name == null) {
+			returnData.setReturn_msg("文件错误");
+			returnData.setReturn_code(MESSAGE.RETURN_FAIL);
+			return returnData;
+		}
+
+		System.out.println("1"+name);
+		String date = parseFileNameWorkShop1(name);
+		if (date == null) {
+			System.out.println("2"+name);
+			date = parseFileNameWorkShop2(name);
+			if(date == null){
+				System.out.println("3"+name);
+				returnData.setReturn_msg("文件名错误");
+				returnData.setReturn_code(MESSAGE.RETURN_FAIL);
+				return returnData;
+			}else{
+				workshop = 2;
+			}
+		}else{
+			workshop = 1;
+		}
+
+		// 解析excel数据并保存到数据库
+		List<ProductionInfo> ls;
+		if(workshop == 1){
+			ls = parseProductionLine1(date, inputStream);
+		}else {
+			ls = parseProductionLine2(date, inputStream);
+		}
+				
+		if (ls.isEmpty()) {
+			returnData.setReturn_msg("文件内容解析出错");
+			returnData.setReturn_code(MESSAGE.RETURN_FAIL);
+			return returnData;
+		}
+		returnData.setReturn_msg("文件上传成功");
+		returnData.setReturn_code(MESSAGE.RETURN_SUCCESS);
+		if(workshop == 1){
+			productionInfoDaoImpl.updateProductionInfoList(ls, date, WORKSHOP.WORKSHOP1);
+		}else{
+			productionInfoDaoImpl.updateProductionInfoList(ls, date, WORKSHOP.WORKSHOP2);
+		}
 		
-		returnData.setData(ls);
+
+		// returnData.setData(ls);
 
 		return returnData;
 	}

@@ -189,6 +189,16 @@ public class UserResource {
 				uploadedInputStream);
 	}
 	
+	@POST
+	@Path("/uploadProductionInfo")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	public ReturnData<ProductionInfo> uploadProductionInfo(@FormDataParam("filepath") InputStream uploadedInputStream,
+			@FormDataParam("filepath") FormDataContentDisposition fileDetail) {
+
+		return excelServiceImpl.uploadProductionInfo(fileDetail.getFileName(),
+				uploadedInputStream);
+	}
+	
 	@GET
 	@Path("/getLoadinfoForTest")
 	@Produces(MediaType.APPLICATION_JSON)

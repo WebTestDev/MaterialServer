@@ -9,6 +9,7 @@ import org.hibernate.Transaction;
 
 import com.thingword.alphonso.bean.LoadingInfo;
 import com.thingword.alphonso.bean.ProductionInfo;
+import com.thingword.alphonso.bean.StoreProductionInfo;
 import com.thingword.alphonso.bean.User;
 import com.thingword.alphonso.dao.ProductionInfoDao;
 import com.thingword.alphonso.util.HibernateUtil;
@@ -16,12 +17,12 @@ import com.thingword.alphonso.util.HibernateUtil;
 public class ProductionInfoDaoImpl implements ProductionInfoDao {
 
 	@Override
-	public boolean updateProductionInfoList(List<ProductionInfo> ls, String date,String workshop) {
+	public boolean updateProductionInfoList(List<ProductionInfo> ls, String date, String workshop) {
 		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
 		Session s = null;
 		Transaction t = null;
 		boolean flag = false;
-		deleteByDateAndWorkShop(date,workshop);
+		deleteByDateAndWorkShop(date, workshop);
 		try {
 			s = sessionFactory.openSession();
 			t = s.beginTransaction();
@@ -103,6 +104,52 @@ public class ProductionInfoDaoImpl implements ProductionInfoDao {
 			s.close();
 		}
 		return ls;
+	}
+
+	@Override
+	public boolean updateStoreProductionInfoList(List<StoreProductionInfo> ls, String date, String batch) {
+		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+		Session s = null;
+		Transaction t = null;
+		boolean flag = false;
+		deleteStoreProductionInfoByDateAndBatch(date, batch);
+		try {
+			s = sessionFactory.openSession();
+			t = s.beginTransaction();
+			for (StoreProductionInfo productionInfo : ls)
+				s.save(productionInfo);
+			t.commit();
+			flag = true;
+		} catch (Exception err) {
+			t.rollback();
+			err.printStackTrace();
+		} finally {
+			s.close();
+		}
+		return flag;
+	}
+
+	@Override
+	public boolean deleteStoreProductionInfoByDateAndBatch(String Date, String batch) {
+		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+		Session s = null;
+		Transaction t = null;
+		boolean flag = false;
+		try {
+			s = sessionFactory.openSession();
+			t = s.beginTransaction();
+			String hql = "delete from StoreProductionInfo where date = '" + Date + "'" + "and uploadbatch ='" + batch
+					+ "'";
+			s.createQuery(hql).executeUpdate();
+			t.commit();
+			flag = true;
+		} catch (Exception err) {
+			t.rollback();
+			err.printStackTrace();
+		} finally {
+			s.close();
+		}
+		return flag;
 	}
 
 }

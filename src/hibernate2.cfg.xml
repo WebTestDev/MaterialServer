@@ -7,7 +7,7 @@
    <session-factory>  
    <!-- Database connection settings -->  
         <property name="connection.driver_class">com.mysql.jdbc.Driver</property>  
-        <property name="connection.url">jdbc:mysql://127.0.0.1/usertable</property>  
+        <property name="connection.url">jdbc:mysql://127.11.0.1/usertable</property>  
         <property name="connection.username">root</property>  
         <property name="connection.password">tcc</property>  
 
