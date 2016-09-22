@@ -16,6 +16,9 @@ public class UnLoadingInfo {
     private String invcode;
     private String shopnum;
     private String executor;
+    private String linenum;
+    private String cMoCode;
+    private String uploadbatch;
     
 	public Date getDate() {
 		return date;
@@ -84,4 +87,23 @@ public class UnLoadingInfo {
 	public void setExecutor(String executor) {
 		this.executor = executor;
 	}
+	public String getUploadbatch() {
+		return uploadbatch;
+	}
+	public void setUploadbatch(String uploadbatch) {
+		this.uploadbatch = uploadbatch;
+	}
+	public String getLinenum() {
+		return linenum;
+	}
+	public void setLinenum(String linenum) {
+		this.linenum = linenum;
+	}
+	public String getcMoCode() {
+		return cMoCode;
+	}
+	public void setcMoCode(String cMoCode) {
+		this.cMoCode = cMoCode;
+	}
+
 }

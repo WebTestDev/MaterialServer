@@ -73,6 +73,8 @@ public class UserServiceImpl implements UserService {
 			message.setReturn_msg(MESSAGE.LOGIN_FAIL);
 		} else {
 			message.setAuthority(user.getAuthority());
+			message.setEmploy_name(user.getEmployname());
+			message.setEmploy_code(user.getEmploycode());
 		}
 		return message;
 	}
@@ -92,8 +94,8 @@ public class UserServiceImpl implements UserService {
 			List<String> inner = new ArrayList<>();
 			inner.add("<input type='checkbox' value='0'>");
 			inner.add(String.valueOf(user.getUserID()));
-			inner.add("无");
-			inner.add("无");
+			inner.add(user.getEmployname());
+			inner.add(user.getEmploycode());
 			inner.add(user.getUsername());
 			inner.add(user.getPasswd());
 			int authority = 0;
@@ -127,6 +129,8 @@ public class UserServiceImpl implements UserService {
 		User user = new User();
 		user.setUsername(reqAddUser.getAdd_account());
 		user.setPasswd(reqAddUser.getAdd_password());
+		user.setEmployname(reqAddUser.getAdd_name());
+		user.setEmploycode(reqAddUser.getAdd_num());
 		String val = reqAddUser.getAdd_rights();
 		int auth = 0;
 		Pattern pattern_a = Pattern.compile(".+仓库.+");
@@ -147,8 +151,8 @@ public class UserServiceImpl implements UserService {
 			List<String> inner = new ArrayList<>();
 			inner.add("<input type='checkbox' value='0'>");
 			inner.add(ID);
-			inner.add("无");
-			inner.add("无");
+			inner.add(user.getEmployname());
+			inner.add(user.getEmploycode());
 			inner.add(user.getUsername());
 			inner.add(user.getPasswd());
 			inner.add(reqAddUser.getAdd_rights());
@@ -171,6 +175,8 @@ public class UserServiceImpl implements UserService {
 		user.setUsername(requser.getEdit_account());
 		user.setPasswd(requser.getEdit_password());
 		user.setUserID(Integer.valueOf(requser.getEdit_id()));
+		user.setEmployname(requser.getEdit_name());
+		user.setEmploycode(requser.getEdit_num());
 		String val = requser.getEdit_rights();
 		int auth = 0;
 		Pattern pattern_a = Pattern.compile(".+仓库.+");
@@ -190,8 +196,8 @@ public class UserServiceImpl implements UserService {
 			List<String> inner = new ArrayList<>();
 			inner.add("<input type='checkbox' value='0'>");
 			inner.add(String.valueOf(user.getUserID()));
-			inner.add("无");
-			inner.add("无");
+			inner.add(user.getEmployname());
+			inner.add(user.getEmploycode());
 			inner.add(user.getUsername());
 			inner.add(user.getPasswd());
 			inner.add(requser.getEdit_rights());

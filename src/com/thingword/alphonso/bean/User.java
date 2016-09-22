@@ -12,6 +12,9 @@ public class User {
     private String username;  
     private String passwd;  
     private String authority;
+    private String employname;
+    private String employcode;
+    
 	public int getUserID() {
 		return userID;
 	}
@@ -35,6 +38,18 @@ public class User {
 	}
 	public void setAuthority(String authority) {
 		this.authority = authority;
+	}
+	public String getEmployname() {
+		return employname;
+	}
+	public void setEmployname(String employname) {
+		this.employname = employname;
+	}
+	public String getEmploycode() {
+		return employcode;
+	}
+	public void setEmploycode(String employcode) {
+		this.employcode = employcode;
 	}  
 
 }

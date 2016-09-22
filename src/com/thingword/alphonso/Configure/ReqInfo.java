@@ -3,6 +3,7 @@ package com.thingword.alphonso.Configure;
 public class ReqInfo {
 	private String date;
 	private String person;
+	private String linenum;
 	public String getDate() {
 		return date;
 	}
@@ -14,5 +15,11 @@ public class ReqInfo {
 	}
 	public void setPerson(String person) {
 		this.person = person;
+	}
+	public String getLinenum() {
+		return linenum;
+	}
+	public void setLinenum(String linenum) {
+		this.linenum = linenum;
 	}
 }

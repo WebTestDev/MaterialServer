@@ -30,8 +30,8 @@
 	<bean id="ProductionInfoDaoImpl" class="com.thingword.alphonso.dao.impl.ProductionInfoDaoImpl" />
 
 
-	<bean id="UserTestServiceImpl" class="com.thingword.alphonso.service.impl.UserTestServiceImpl" />
-	<bean id="UserTestDaoImpl" class="com.thingword.alphonso.dao.impl.UserTestDaoImpl" />
+	<bean id="ERPServiceImpl" class="com.thingword.alphonso.service.impl.ERPServiceImpl" />
+	<bean id="ERPDaoImpl" class="com.thingword.alphonso.dao.impl.ERPDaoImpl" />
 
 	<bean id="StoreKeeperServiceImpl" class="com.thingword.alphonso.service.impl.StoreKeeperServiceImpl" />
 	<bean id="StoreKeeperDaoImpl" class="com.thingword.alphonso.dao.impl.StoreKeeperDaoImpl" />

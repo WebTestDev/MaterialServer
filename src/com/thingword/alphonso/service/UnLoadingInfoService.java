@@ -10,5 +10,7 @@ import com.thingword.alphonso.dao.UnLoadingInfoDao;
 public interface UnLoadingInfoService {
 
 	public ReturnData<UnLoadingInfo> getUnLoadingInfoByDate(ReqInfo reqInfo);
+	
+	public ReturnData<UnLoadingInfo> getAllUnLoadingInfoByDate(ReqInfo reqInfo);
 
 }

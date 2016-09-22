@@ -31,10 +31,12 @@ import com.thingword.alphonso.Configure.ReturnMessage;
 import com.thingword.alphonso.Configure.ReturnUserList;
 import com.thingword.alphonso.bean.DistributionInfo;
 import com.thingword.alphonso.bean.LoadingInfo;
+import com.thingword.alphonso.bean.ProductInfoDetail;
 import com.thingword.alphonso.bean.ProductionInfo;
 import com.thingword.alphonso.bean.StoreKeeper;
 import com.thingword.alphonso.bean.UnLoadingInfo;
 import com.thingword.alphonso.bean.User;
+import com.thingword.alphonso.bean2.RdRecord;
 import com.thingword.alphonso.dao.LoadingInfoDao;
 import com.thingword.alphonso.dao.impl.LoadingInfoDaoImpl;
 import com.thingword.alphonso.service.LoadingInfoService;
@@ -47,7 +49,7 @@ import com.thingword.alphonso.service.impl.ProductionInfoServiceImpl;
 import com.thingword.alphonso.service.impl.StoreKeeperServiceImpl;
 import com.thingword.alphonso.service.impl.UnLoadingInfoServiceImpl;
 import com.thingword.alphonso.service.impl.UserServiceImpl;
-import com.thingword.alphonso.service.impl.UserTestServiceImpl;
+import com.thingword.alphonso.service.impl.ERPServiceImpl;
 
 import jersey.repackaged.com.google.common.collect.Lists;
 
@@ -79,7 +81,7 @@ public class UserResource {
 	private ProductionInfoServiceImpl productionInfoServiceImpl;
 	
 	@Autowired
-	private UserTestServiceImpl userTestServiceImpl;
+	private ERPServiceImpl erpServiceImpl;
 	
 	@Autowired
 	private StoreKeeperServiceImpl storeKeeperServiceImpl;
@@ -126,7 +128,8 @@ public class UserResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public ReturnData<ProductionInfo> reqProductionInfo(ReqInfo reqInfo) {
-		return productionInfoServiceImpl.getProductionInfoByDate(reqInfo.getDate());
+		System.out.println("reqProductionInfo£º"+reqInfo.getLinenum());
+		return productionInfoServiceImpl.getProductionInfoByDateAndLine(reqInfo.getDate(),reqInfo.getLinenum());
 	}
 
 	@POST
@@ -138,14 +141,39 @@ public class UserResource {
 	}
 	
 	@POST
-	@Path("/reqUserTest")
+	@Path("/reqProductionInfoDetail")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public ReturnData<DistributionInfo> reqUserTest(ReqInfo reqInfo) {
-		userTestServiceImpl.getAllUsers();
+	public ReturnData<ProductInfoDetail> reqProductionInfoDetail(ReqInfo reqInfo) {
+		return productionInfoServiceImpl.getProductInfoDetailByDateAndLine(reqInfo.getDate(),reqInfo.getLinenum());
+	}
+	
+	@POST
+	@Path("/reqERPTest")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public ReturnData<RdRecord> reqUserTest(ReqInfo reqInfo) {
+		erpServiceImpl.getRd();
 		return null;
 	}
 
+	@POST
+	@Path("/reqAllUnLoadingInfo")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public ReturnData<UnLoadingInfo> reqAllUnLoadingInfo(ReqInfo reqInfo) {
+		return unloadingInfoServiceImpl.getAllUnLoadingInfoByDate(reqInfo);
+	}
+	
+	@POST
+	@Path("/reqAllProductionInfo")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public ReturnData<ProductionInfo> reqAllProductionInfo(ReqInfo reqInfo) {
+		System.out.println("reqProductionInfo£º"+reqInfo.getLinenum());
+		return productionInfoServiceImpl.getProductionInfoByDate(reqInfo.getDate());
+	}
+	
 //	@POST
 //	@Path("/upload")
 //	@Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -241,9 +269,7 @@ public class UserResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public ReturnUserList reqUpdateUser(ReqUpdateUser user) {
-		System.out.println("updateAddUser" + user.getEdit_account());
 		return userServiceImpl.updateUser(user);
-		//return userServiceImpl.createUser(adduser);
 	}
 
 }

@@ -8,6 +8,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
 import com.thingword.alphonso.bean.LoadingInfo;
+import com.thingword.alphonso.bean.ProductionInfo;
 import com.thingword.alphonso.bean.UnLoadingInfo;
 import com.thingword.alphonso.dao.UnLoadingInfoDao;
 import com.thingword.alphonso.util.HibernateUtil;
@@ -23,7 +24,7 @@ public class UnLoadingInfoDaoImpl implements UnLoadingInfoDao{
         try{  
          s = sessionFactory.openSession();  
          t = s.beginTransaction();  
-         String hql = "From UnLoadingInfo where date = '"+Date+"'";    
+         String hql = "From UnLoadingInfo where date = '"+Date+"' and executor = '"+person+"'";    
          Query query = s.createQuery(hql);   
          ls = query.list();    
          t.commit();  
@@ -57,5 +58,54 @@ public class UnLoadingInfoDaoImpl implements UnLoadingInfoDao{
         }  
         return ls; 
 	}
+
+	@Override
+	public boolean updateUnLoadingInfoList(List<UnLoadingInfo> ls, String date,String batch) {
+		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+		Session s = null;
+		Transaction t = null;
+		boolean flag = false;
+		deleteUnLoadingInfoByDateAndBatch(date, batch);
+		try {
+			s = sessionFactory.openSession();
+			t = s.beginTransaction();
+			for (UnLoadingInfo unLoadingInfo : ls){
+				unLoadingInfo.setUploadbatch(batch);
+				s.save(unLoadingInfo);
+			}
+			t.commit();
+			flag = true;
+		} catch (Exception err) {
+			t.rollback();
+			err.printStackTrace();
+		} finally {
+			s.close();
+		}
+		return flag;
+	}
+
+	@Override
+	public boolean deleteUnLoadingInfoByDateAndBatch(String Date, String batch) {
+		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+		Session s = null;
+		Transaction t = null;
+		boolean flag = false;
+		try {
+			s = sessionFactory.openSession();
+			t = s.beginTransaction();
+			String hql = "delete from UnLoadingInfo where date = '" + Date + "'" + "and uploadbatch ='" + batch
+					+ "'";
+			s.createQuery(hql).executeUpdate();
+			t.commit();
+			flag = true;
+		} catch (Exception err) {
+			t.rollback();
+			err.printStackTrace();
+		} finally {
+			s.close();
+		}
+		return flag;
+	}
+	
 
 }

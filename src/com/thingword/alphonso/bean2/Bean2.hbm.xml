@@ -5,13 +5,38 @@
 
 <hibernate-mapping package="com.thingword.alphonso.bean2">
 
-	<class name="UserTest" table="usertest">
-		<id name="userID" column="Id" type="int">
+	<class name="RdRecord" table="RdRecord">
+		<id name="ID" column="ID" type="int">
 			<generator class="increment" />
 		</id>
-		<property name="user" type="string" />
+		<property name="cBusType" type="string" />
+		<property name="cMPoCode" type="string" />
+		<property name="cPsPcode" type="string" />
+		<property name="cVouchType" type="string" />
+		<property name="cHandler" type="string" />
+		<property name="cMaker" type="string" />
+		<property name="dVeriDate" type="date" />		
 	</class>
 
-	
+
+	<class name="RdRecords" table="RdRecords">
+		<id name="AutoID" column="AutoID" type="int">
+			<generator class="increment" />
+		</id>
+		<property name="ID" type="int" />
+		<property name="cInvCode" type="string" />
+		<property name="iQuantity" type="float" />
+		<property name="cBatch" type="string" />
+	</class>
+
+	<class name="Inventory" table="Inventory">
+		<id name="cInvCode" column="cInvCode" type="string">
+			<generator class="assigned" />
+		</id>
+		<property name="cInvName" type="string" />
+		<property name="cInvStd" type="string" />
+		<property name="cInvDefine8" type="string" />
+	</class>
+
 
 </hibernate-mapping>

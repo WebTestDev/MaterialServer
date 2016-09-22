@@ -19,10 +19,15 @@ import com.thingword.alphonso.Configure.ReturnData;
 import com.thingword.alphonso.Configure.ReturnMessage;
 import com.thingword.alphonso.Configure.WORKSHOP;
 import com.thingword.alphonso.bean.LoadingInfo;
+import com.thingword.alphonso.bean.ProductInfoDetail;
 import com.thingword.alphonso.bean.ProductionInfo;
 import com.thingword.alphonso.bean.StoreProductionInfo;
 import com.thingword.alphonso.bean.UnLoadingInfo;
+import com.thingword.alphonso.bean2.RdRecord;
+import com.thingword.alphonso.bean2.VOrderDetail;
+import com.thingword.alphonso.dao.impl.ERPDaoImpl;
 import com.thingword.alphonso.dao.impl.ProductionInfoDaoImpl;
+import com.thingword.alphonso.dao.impl.StoreKeeperDaoImpl;
 import com.thingword.alphonso.dao.impl.UnLoadingInfoDaoImpl;
 import com.thingword.alphonso.service.ExcelService;
 
@@ -38,7 +43,11 @@ public class ExcelServiceImpl implements ExcelService {
 	private ProductionInfoDaoImpl productionInfoDaoImpl;
 	@Autowired
 	private UnLoadingInfoDaoImpl unloadingInfoDaoImpl;
-
+	@Autowired
+	private ERPDaoImpl erpDaoImpl;
+	@Autowired
+	private StoreKeeperDaoImpl storeKeeperDaoImpl;
+	
 	private String parseFileNameWorkShop2(String name) {
 		String val = null;
 
@@ -81,7 +90,6 @@ public class ExcelServiceImpl implements ExcelService {
 					if (matcher_batch.find()) {
 						String batch = matcher_batch.group();
 						val[1] = batch.substring(1, batch.length()-1);
-						System.out.println(val[1]);
 					}
 				}
 
@@ -145,7 +153,7 @@ public class ExcelServiceImpl implements ExcelService {
 					productionInfo.setWorkshop(WORKSHOP.WORKSHOP2);
 
 					val = sheet.getCell(index++, i).getContents();
-					productionInfo.setProductcode(val);
+					productionInfo.setProductcode(fillProductCode(val,WORKSHOP.WORKSHOP2));
 
 					val = sheet.getCell(index++, i).getContents();
 					productionInfo.setSpec(val);
@@ -173,11 +181,11 @@ public class ExcelServiceImpl implements ExcelService {
 	private List<StoreProductionInfo> parseProductionLineStore(String date, String batch, InputStream inputStream) {
 		List<StoreProductionInfo> ls = new ArrayList<>();
 		Workbook workbook;
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd ");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		try {
 			workbook = Workbook.getWorkbook(inputStream);
 			Sheet sheet = workbook.getSheet(0);
-			for (int i = 2; i < sheet.getRows(); i++) {
+			for (int i = 1; i < sheet.getRows(); i++) {
 				int index = 1;
 				Cell cell = sheet.getCell(index++, i);
 				String val = cell.getContents();
@@ -193,9 +201,13 @@ public class ExcelServiceImpl implements ExcelService {
 
 					val = sheet.getCell(index++, i).getContents();
 					productionInfo.setProductcode(val);
+					
+					cell = sheet.getCell(index++, i);
 
-					val = sheet.getCell(index++, i).getContents();
+					val = cell.getContents();
 					productionInfo.setSpec(val);
+					
+//					System.out.println("color:"+cell.getCellFormat().getBackgroundColour()+""+val);
 
 					val = sheet.getCell(index++, i).getContents();
 					productionInfo.setSchedulednum(val);
@@ -216,6 +228,22 @@ public class ExcelServiceImpl implements ExcelService {
 		}
 		return ls;
 	}
+	
+	private String fillProductCode(String code, String worksop) {
+		if (worksop.equals(WORKSHOP.WORKSHOP2)) {
+			StringBuilder stringBuilder = new StringBuilder();
+			stringBuilder.append('3');
+			stringBuilder.append(code);
+			return stringBuilder.toString();
+		} else if (worksop.equals(WORKSHOP.WORKSHOP1)) {
+			StringBuilder stringBuilder = new StringBuilder();
+			stringBuilder.append('2');
+			stringBuilder.append(code);
+			return stringBuilder.toString();
+		}
+		return null;
+
+	}
 
 	private List<ProductionInfo> parseProductionLine1(String date, InputStream inputStream) {
 		List<ProductionInfo> ls = new ArrayList<>();
@@ -235,8 +263,9 @@ public class ExcelServiceImpl implements ExcelService {
 					productionInfo.setTasknumber(val);
 					productionInfo.setDate(Date.valueOf(date));
 
+					
 					val = sheet.getCell(index++, i).getContents();
-					productionInfo.setProductcode(val);
+					productionInfo.setProductcode(fillProductCode(val,WORKSHOP.WORKSHOP1));
 
 					index++;
 
@@ -251,17 +280,15 @@ public class ExcelServiceImpl implements ExcelService {
 
 					val = sheet.getCell(index++, i).getContents();
 					productionInfo.setProductline(val);
+					index+=9;
+					 val = sheet.getCell(index++, i).getContents();
+					 productionInfo.setRemark(val);
 					//
-					// index = 10;
-					//
-					// val = sheet.getCell(index++, i).getContents();
-					// productionInfo.setRemark(val);
-					//
-					// val = sheet.getCell(index++, i).getContents();
-					// productionInfo.setProcessflow(val);
-					//
-					// val = sheet.getCell(index++, i).getContents();
-					// productionInfo.setBoardcode(val);
+					 val = sheet.getCell(index++, i).getContents();
+					 productionInfo.setProcessflow(val);
+					
+					 val = sheet.getCell(index++, i).getContents();
+					 productionInfo.setBoardcode(val);
 					ls.add(productionInfo);
 
 				}
@@ -300,6 +327,17 @@ public class ExcelServiceImpl implements ExcelService {
 			return returnData;
 		}
 		productionInfoDaoImpl.updateStoreProductionInfoList(ls, val[0],val[1]);
+		
+		List<RdRecord> rdRecordls = erpDaoImpl.getRdRecord(ls);
+		List<UnLoadingInfo> unLoadingInfols = erpDaoImpl.getRdRecords(rdRecordls);
+		unLoadingInfols = erpDaoImpl.updateUnLoadingInfo(unLoadingInfols);
+		unLoadingInfols = storeKeeperDaoImpl.getALLUnLoadingInfo(unLoadingInfols);
+		unloadingInfoDaoImpl.updateUnLoadingInfoList(unLoadingInfols,val[0],val[1]);
+		
+		System.out.println("xls parse size:"+ls.size());
+		System.out.println("rds parse size:"+rdRecordls.size());
+		System.out.println("unLoadingInfols parse size:"+unLoadingInfols.size());
+		
 
 		{
 			// 生成当天的unloadinfo并保存到数据可以
@@ -308,8 +346,9 @@ public class ExcelServiceImpl implements ExcelService {
 			// 3.保存到unloadinfo数据库；
 			returnData.setReturn_msg("文件上传成功");
 			returnData.setReturn_code(MESSAGE.RETURN_SUCCESS);
-			List<UnLoadingInfo> lsa = unloadingInfoDaoImpl.getAllUnLoadingInfoByDate("2016-08-25");
+//			List<UnLoadingInfo> lsa = unloadingInfoDaoImpl.getAllUnLoadingInfoByDate("2016-08-25");
 			// returnData.setData(lsa);
+			
 		}
 
 		return returnData;
@@ -391,10 +430,10 @@ public class ExcelServiceImpl implements ExcelService {
 			return returnData;
 		}
 
-		System.out.println("1"+name);
+//		System.out.println("1"+name);
 		String date = parseFileNameWorkShop1(name);
 		if (date == null) {
-			System.out.println("2"+name);
+//			System.out.println("2"+name);
 			date = parseFileNameWorkShop2(name);
 			if(date == null){
 				System.out.println("3"+name);
@@ -423,11 +462,22 @@ public class ExcelServiceImpl implements ExcelService {
 		}
 		returnData.setReturn_msg("文件上传成功");
 		returnData.setReturn_code(MESSAGE.RETURN_SUCCESS);
+		System.out.println("workshop "+workshop);
 		if(workshop == 1){
 			productionInfoDaoImpl.updateProductionInfoList(ls, date, WORKSHOP.WORKSHOP1);
 		}else{
 			productionInfoDaoImpl.updateProductionInfoList(ls, date, WORKSHOP.WORKSHOP2);
 		}
+		
+		List<VOrderDetail> vOrderDetails = erpDaoImpl.getVOrderDetail(ls);
+		List<ProductInfoDetail> productInfoDetails =  erpDaoImpl.getProductInfoDetail(vOrderDetails);
+		
+		if(workshop == 1){
+			productionInfoDaoImpl.updateDetailList(productInfoDetails, date,WORKSHOP.WORKSHOP1);
+		}else{
+			productionInfoDaoImpl.updateDetailList(productInfoDetails, date,WORKSHOP.WORKSHOP2);
+		}
+		
 		
 
 		// returnData.setData(ls);

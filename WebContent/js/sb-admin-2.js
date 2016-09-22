@@ -325,7 +325,7 @@ $(document).ready(function() {
         console.log($("#date-product").val());
         if($("#date-product").val()){
             $.ajax({
-                "url" : "/TestServer/rest/materail/reqProductionInfo",
+                "url" : "/TestServer/rest/materail/reqAllProductionInfo",
                 "data" : JSON.stringify({
                     "date":$("#date-product").val()}
                 ),
@@ -414,7 +414,7 @@ $(document).ready(function() {
     $("#datebutton-gallery").on("click",function(){
         if($("#date-gallery").val()){
             $.ajax({
-                "url" : "/TestServer/rest/materail/reqUnLoadingInfo",
+                "url" : "/TestServer/rest/materail/reqAllUnLoadingInfo",
                 "data" : JSON.stringify({
                     "date":$("#date-gallery").val()}
                 ),

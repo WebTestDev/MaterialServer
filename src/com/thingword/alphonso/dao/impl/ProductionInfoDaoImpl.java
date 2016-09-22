@@ -8,6 +8,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
 import com.thingword.alphonso.bean.LoadingInfo;
+import com.thingword.alphonso.bean.ProductInfoDetail;
 import com.thingword.alphonso.bean.ProductionInfo;
 import com.thingword.alphonso.bean.StoreProductionInfo;
 import com.thingword.alphonso.bean.User;
@@ -105,6 +106,54 @@ public class ProductionInfoDaoImpl implements ProductionInfoDao {
 		}
 		return ls;
 	}
+	
+	@Override
+	public List<ProductionInfo> getProductionInfoByDateAndLine(String Date,String linenum) {
+		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+		Session s = null;
+		Transaction t = null;
+		List<ProductionInfo> ls = null;
+		try {
+			s = sessionFactory.openSession();
+			t = s.beginTransaction();
+			String hql = "From ProductionInfo where date = '" 
+			+ Date + "' and productline = '"+linenum+"'";
+			Query query = s.createQuery(hql);
+			ls = query.list();
+			t.commit();
+		} catch (Exception err) {
+			t.rollback();
+			err.printStackTrace();
+		} finally {
+			s.close();
+		}
+		return ls;
+	}
+	
+	@Override
+	public List<ProductInfoDetail> getProductionInfoDetailByDateAndLine(String Date, String linenum) {
+		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+		Session s = null;
+		Transaction t = null;
+		List<ProductInfoDetail> ls = null;
+		try {
+			s = sessionFactory.openSession();
+			t = s.beginTransaction();
+			String hql = "From ProductInfoDetail where date = '" 
+			+ Date + "' and linenum = '"+linenum+"'";
+			System.out.println(hql);
+			Query query = s.createQuery(hql);
+			ls = query.list();
+			t.commit();
+		} catch (Exception err) {
+			t.rollback();
+			err.printStackTrace();
+		} finally {
+			s.close();
+		}
+		return ls;
+	}
+
 
 	@Override
 	public boolean updateStoreProductionInfoList(List<StoreProductionInfo> ls, String date, String batch) {
@@ -152,4 +201,50 @@ public class ProductionInfoDaoImpl implements ProductionInfoDao {
 		return flag;
 	}
 
+	@Override
+	public boolean updateDetailList(List<ProductInfoDetail> ls, String date,String workshop) {
+		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+		Session s = null;
+		Transaction t = null;
+		boolean flag = false;
+		deleteDetailByDateAndWokshop(date, workshop);
+		try {
+			s = sessionFactory.openSession();
+			t = s.beginTransaction();
+			for (ProductInfoDetail detail : ls)
+				s.save(detail);
+			t.commit();
+			flag = true;
+		} catch (Exception err) {
+			t.rollback();
+			err.printStackTrace();
+		} finally {
+			s.close();
+		}
+		return flag;
+	}
+
+	@Override
+	public boolean deleteDetailByDateAndWokshop(String Date,String workshop) {
+		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+		Session s = null;
+		Transaction t = null;
+		boolean flag = false;
+		try {
+			s = sessionFactory.openSession();
+			t = s.beginTransaction();
+			String hql = "delete from ProductInfoDetail where date = '" + Date
+					+ "' and workshop = '"+workshop +"'" ;
+			System.out.println(hql);
+			s.createQuery(hql).executeUpdate();
+			t.commit();
+			flag = true;
+		} catch (Exception err) {
+			t.rollback();
+			err.printStackTrace();
+		} finally {
+			s.close();
+		}
+		return flag;
+	}
 }

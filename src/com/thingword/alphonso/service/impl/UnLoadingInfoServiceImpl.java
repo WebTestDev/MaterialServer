@@ -37,19 +37,28 @@ public class UnLoadingInfoServiceImpl implements UnLoadingInfoService {
 				returnData.setReturn_code(MESSAGE.RETURN_SUCCESS);
 				returnData.setReturn_msg(MESSAGE.QUERY_SUCCESS);
 				returnData.setData(ls);
-			}
-			
-//			List<ProductionInfo> pList = productionInfoDaoImpl.getProductionInfoByDate(reqinfo.getDate());
-//			if(pList.isEmpty()){
-//				returnData.setReturn_code(MESSAGE.RETURN_FAIL);
-//				returnData.setReturn_msg(MESSAGE.NO_PRODUCTION_INFO);
-//				return returnData;
-//			}
-			
+			}				
 		}
+		return returnData;
+	} 
+	
+	@Override
+	public ReturnData<UnLoadingInfo> getAllUnLoadingInfoByDate(ReqInfo reqInfo) {
 		
+		//1.获取查询的unloadinginfo
+		//2.若为空，查询是否有上传当天的生产记录
 		
-		
+		ReturnData<UnLoadingInfo> returnData= new ReturnData<>();
+		List<UnLoadingInfo> ls= unloadingInfoDaoImpl.getAllUnLoadingInfoByDate(reqInfo.getDate());
+		returnData.setReturn_code(MESSAGE.RETURN_FAIL);
+		returnData.setReturn_msg(MESSAGE.QUERY_NONE);
+		if(ls != null){
+			if(ls.size() != 0){
+				returnData.setReturn_code(MESSAGE.RETURN_SUCCESS);
+				returnData.setReturn_msg(MESSAGE.QUERY_SUCCESS);
+				returnData.setData(ls);
+			}				
+		}
 		return returnData;
 	} 
 }

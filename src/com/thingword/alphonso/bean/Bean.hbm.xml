@@ -12,6 +12,8 @@
 		<property name="username" type="string" />
 		<property name="passwd" type="string" />
 		<property name="authority" type="string" />
+		<property name="employname" type="string" />
+		<property name="employcode" type="string" />
 	</class>
 
 	<class name="LoadingInfo" table="loadinginfo">
@@ -40,6 +42,9 @@
 		<property name="invcode" type="string" />
 		<property name="shopnum" type="string" />
 		<property name="executor" type="string" />
+		<property name="linenum" type="string" />	
+		<property name="cMoCode" type="string" />
+		<property name="uploadbatch" type="string" />
 	</class>
 
 	<class name="DistributionInfo" table="distriinfo">
@@ -104,6 +109,23 @@
 		<property name="processflow" type="string" />
 		<property name="boardcode" type="string" />
 		<property name="uploadbatch" type="string" />
+	</class>
+
+	<class name="ProductInfoDetail" table="productioninfodetail">
+		<id name="Id" column="Id" type="int">
+			<generator class="increment" />
+		</id>
+		<property name="tasknumber" type="string" />
+		<property name="date" type="date" />
+		<property name="productcode" type="string" />
+		<property name="invcode" type="string" />
+		<property name="invname" type="string" />
+		<property name="invstd" type="string" />
+		<property name="qty" type="string" />
+		<property name="bomqty" type="string" />
+		<property name="define28" type="string" />
+		<property name="linenum" type="string" />
+		<property name="workshop" type="string" />
 	</class>
 
 </hibernate-mapping>

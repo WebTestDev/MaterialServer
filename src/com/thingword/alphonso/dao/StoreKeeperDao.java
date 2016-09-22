@@ -10,4 +10,6 @@ import com.thingword.alphonso.bean.UnLoadingInfo;
 
 public interface StoreKeeperDao {
 	public List<StoreKeeper> getStoreKeeperList();  
+	
+	public List<UnLoadingInfo> getALLUnLoadingInfo(List<UnLoadingInfo> ls);  
 }
