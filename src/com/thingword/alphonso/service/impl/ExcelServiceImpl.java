@@ -504,15 +504,15 @@ public class ExcelServiceImpl implements ExcelService {
 		}
 		productionInfoDaoImpl.updateStoreProductionInfoList(ls, val[0],val[1]);
 //		
-		List<RdRecord> rdRecordls = erpDaoImpl.getRdRecord(ls);
-		List<UnLoadingInfo> unLoadingInfols = erpDaoImpl.getRdRecords(rdRecordls);
-		unLoadingInfols = erpDaoImpl.updateUnLoadingInfo(unLoadingInfols);
-		unLoadingInfols = storeKeeperDaoImpl.getALLUnLoadingInfo(unLoadingInfols);
-		unloadingInfoDaoImpl.updateUnLoadingInfoList(unLoadingInfols,val[0],val[1]);
-//		
-		System.out.println("xls parse size:"+ls.size());
-		System.out.println("rds parse size:"+rdRecordls.size());
-		System.out.println("unLoadingInfols parse size:"+unLoadingInfols.size());
+//		List<RdRecord> rdRecordls = erpDaoImpl.getRdRecord(ls);
+//		List<UnLoadingInfo> unLoadingInfols = erpDaoImpl.getRdRecords(rdRecordls);
+//		unLoadingInfols = erpDaoImpl.updateUnLoadingInfo(unLoadingInfols);
+//		unLoadingInfols = storeKeeperDaoImpl.getALLUnLoadingInfo(unLoadingInfols);
+//		unloadingInfoDaoImpl.updateUnLoadingInfoList(unLoadingInfols,val[0],val[1]);
+////		
+//		System.out.println("xls parse size:"+ls.size());
+//		System.out.println("rds parse size:"+rdRecordls.size());
+//		System.out.println("unLoadingInfols parse size:"+unLoadingInfols.size());
 //		
 //
 //		{

@@ -9,6 +9,7 @@ import com.thingword.alphonso.Configure.ReturnData;
 import com.thingword.alphonso.bean.LoadingInfo;
 import com.thingword.alphonso.bean.ProductInfoDetail;
 import com.thingword.alphonso.bean.ProductionInfo;
+import com.thingword.alphonso.bean.StoreProductionInfo;
 import com.thingword.alphonso.dao.ProductionInfoDao;
 import com.thingword.alphonso.dao.impl.ProductionInfoDaoImpl;
 import com.thingword.alphonso.service.ProductionInfoService;
@@ -57,6 +58,23 @@ public class ProductionInfoServiceImpl implements ProductionInfoService{
 	public ReturnData<ProductInfoDetail> getProductInfoDetailByDateAndLine(String Date, String Line) {
 		ReturnData<ProductInfoDetail> returnData= new ReturnData<>();	
 		List<ProductInfoDetail> ls= productionInfoDaoImpl.getProductionInfoDetailByDateAndLine(Date,Line);
+		returnData.setReturn_code(MESSAGE.RETURN_FAIL);
+		returnData.setReturn_msg(MESSAGE.QUERY_NONE);
+		if(ls != null){
+			if(!ls.isEmpty()){
+				returnData.setReturn_code(MESSAGE.RETURN_SUCCESS);
+				returnData.setReturn_msg(MESSAGE.QUERY_SUCCESS);
+				returnData.setData(ls);
+			}
+		}
+		return returnData;
+	}
+
+	@Override
+	public ReturnData<StoreProductionInfo> getStoreProductionInfoByDate(String Date) {
+		ReturnData<StoreProductionInfo> returnData= new ReturnData<>();
+		
+		List<StoreProductionInfo> ls= productionInfoDaoImpl.getStoreProductionInfoByDate(Date);
 		returnData.setReturn_code(MESSAGE.RETURN_FAIL);
 		returnData.setReturn_msg(MESSAGE.QUERY_NONE);
 		if(ls != null){

@@ -250,4 +250,26 @@ public class ProductionInfoDaoImpl implements ProductionInfoDao {
 		}
 		return flag;
 	}
+
+	@Override
+	public List<StoreProductionInfo> getStoreProductionInfoByDate(String Date) {
+		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+		Session s = null;
+		Transaction t = null;
+		List<StoreProductionInfo> ls = null;
+		try {
+			s = sessionFactory.openSession();
+			t = s.beginTransaction();
+			String hql = "From StoreProductionInfo where date = '" + Date + "'";
+			Query query = s.createQuery(hql);
+			ls = query.list();
+			t.commit();
+		} catch (Exception err) {
+			t.rollback();
+			err.printStackTrace();
+		} finally {
+			s.close();
+		}
+		return ls;
+	}
 }

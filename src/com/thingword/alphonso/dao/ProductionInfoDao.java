@@ -21,6 +21,8 @@ public interface ProductionInfoDao {
 	
 	public List<ProductionInfo> getProductionInfoByDate(String Date);  
 	
+	public List<StoreProductionInfo> getStoreProductionInfoByDate(String Date);  
+	
 	public List<ProductionInfo> getProductionInfoByDateAndLine(String Date,String linenum) ;
 	
 	public List<ProductInfoDetail> getProductionInfoDetailByDateAndLine(String Date,String linenum) ;

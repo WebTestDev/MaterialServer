@@ -1,15 +1,8 @@
-/*!
- * Start Bootstrap - SB Admin 2 v3.3.7+1 (http://startbootstrap.com/template-overviews/sb-admin-2)
- * Copyright 2013-2016 Start Bootstrap
- * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap/blob/gh-pages/LICENSE)
- */
 $(function() {
     $('#side-menu').metisMenu();
 });
 
-// Loads the correct sidebar on window load,
-// collapses the sidebar on window resize.
-// Sets the min-height of #page-wrapper to window size
+
 $(function() {
     $(window)
             .bind(
@@ -56,6 +49,7 @@ $(function() {
 $(document).ready(function() {
     $('#dataTables-example').DataTable({
         "ajax" : "/TestServer/rest/materail/reqUserList",
+        "bDestroy":true,
         "responsive" : true,
         "language" : {
             "url" : "Chinese.json"
@@ -260,23 +254,41 @@ $(document).ready(function() {
 });
 
 
+function showMask(){
+    $("#mask").css("height",$(document).height());
+    $("#mask").css("width",$(document).width());
+    $("#mask").show();
+}
+    //隐藏遮罩层
+function hideMask(){
+    $("#mask").hide();
+}
 
 function fileloadon() {
+        if($("input[type='file']").val() == ""){
+            $("#ifos").html("请选择文件!");
+            $('#myModal4').modal();
+            return false;
+        }
+        showMask();
         $("#_fileForm").ajaxSubmit({
             type: "post",
             url: "/TestServer/rest/materail/uploadProductionInfoForStore",
             success: function (backdata) {
                 if(backdata.return_code == "fail"){
+                    hideMask();
                     $("#ifos").html(backdata.return_msg);
                     $('#myModal4').modal();
                 }
                 if(backdata.return_code == "success")
                 {
+                    hideMask();
                     $("#ifos").html("上传成功！");
                     $('#myModal4').modal();
                 }
             },
             error: function (msg) {
+                hideMask();
                 $("#ifos").html("文件上传失败!");
                 $('#myModal4').modal();
             }
@@ -285,21 +297,29 @@ function fileloadon() {
         $("input[type='file']").val("");
 }
 function fileloadon2() {
+        if($("input[type='file']").val() == ""){
+            $("#ifos").html("请选择文件!");
+            $('#myModal4').modal();
+            return false;
+        }
+        showMask();
         $("#_fileForm2").ajaxSubmit({
             type: "post",
             url: "/TestServer/rest/materail/uploadProductionInfo",
             success: function (backdata) {
-                console.log(backdata);
                 if(backdata.return_code == "fail"){
+                    hideMask();
                     $("#ifos").html(backdata.return_msg);
                     $('#myModal4').modal();
                 }
                 if(backdata.return_code == "success"){
+                    hideMask();
                     $("#ifos").html("上传成功！");
                     $('#myModal4').modal();
                 }
             },
             error: function (msg) {
+                hideMask();
                 $("#ifos").html("文件上传失败!");
                 $('#myModal4').modal();
             }

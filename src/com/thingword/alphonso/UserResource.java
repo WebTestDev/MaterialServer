@@ -34,6 +34,7 @@ import com.thingword.alphonso.bean.LoadingInfo;
 import com.thingword.alphonso.bean.ProductInfoDetail;
 import com.thingword.alphonso.bean.ProductionInfo;
 import com.thingword.alphonso.bean.StoreKeeper;
+import com.thingword.alphonso.bean.StoreProductionInfo;
 import com.thingword.alphonso.bean.UnLoadingInfo;
 import com.thingword.alphonso.bean.User;
 import com.thingword.alphonso.bean2.RdRecord;
@@ -141,6 +142,14 @@ public class UserResource {
 	}
 	
 	@POST
+	@Path("/reqStoreProductionInfo")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public ReturnData<StoreProductionInfo> reqStoreProductionInfo(ReqInfo reqInfo) {
+		return productionInfoServiceImpl.getStoreProductionInfoByDate(reqInfo.getDate());
+	}
+	
+	@POST
 	@Path("/reqProductionInfoDetail")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -170,7 +179,7 @@ public class UserResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public ReturnData<ProductionInfo> reqAllProductionInfo(ReqInfo reqInfo) {
-		System.out.println("reqProductionInfo£º"+reqInfo.getLinenum());
+		//System.out.println("reqProductionInfo£º"+reqInfo.getLinenum());
 		return productionInfoServiceImpl.getProductionInfoByDate(reqInfo.getDate());
 	}
 	
