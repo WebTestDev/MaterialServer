@@ -121,6 +121,8 @@ public class ProductionInfoDaoImpl implements ProductionInfoDao {
 			Query query = s.createQuery(hql);
 			ls = query.list();
 			t.commit();
+			System.out.println(hql);
+			System.out.println("size:"+ls.size());
 		} catch (Exception err) {
 			t.rollback();
 			err.printStackTrace();
@@ -141,10 +143,11 @@ public class ProductionInfoDaoImpl implements ProductionInfoDao {
 			t = s.beginTransaction();
 			String hql = "From ProductInfoDetail where date = '" 
 			+ Date + "' and linenum = '"+linenum+"'";
-			System.out.println(hql);
 			Query query = s.createQuery(hql);
 			ls = query.list();
 			t.commit();
+			System.out.println(hql);
+			System.out.println("size:"+ls.size());
 		} catch (Exception err) {
 			t.rollback();
 			err.printStackTrace();

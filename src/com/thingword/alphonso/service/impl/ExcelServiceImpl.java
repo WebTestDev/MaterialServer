@@ -68,11 +68,11 @@ public class ExcelServiceImpl implements ExcelService {
 		return val;
 	}
 
-	private String[] parseFileNameStore(String name) {
+	private String[] parseFileNameStoreWorkshop1(String name) {
 		String[] val = null;
 
-		String regex = "\\D+-\\d{4}-\\d{1,2}-\\d{1,2}\\(\\d+\\).xls";
-		String regex_date = "\\d{4}-\\d{1,2}-\\d{1,2}";
+		String regex = "1\\D+-\\d{4}-\\d{1,2}-\\d{1,2}-\\(\\d{4}-\\d{1,2}-\\d{1,2}\\)-\\(\\d+\\).xls";
+		String regex_date = "\\d{4}-\\d{1,2}\\-\\d{1,2}";
 		String regex_batch = "\\(\\d+\\)";
 
 		Pattern p1 = Pattern.compile(regex);
@@ -80,19 +80,48 @@ public class ExcelServiceImpl implements ExcelService {
 		Pattern p3 = Pattern.compile(regex_batch);
 		if (p1.matcher(name).matches()) {
 			Matcher matcher = p2.matcher(name);
-			if (matcher.find()) {
-				String date = matcher.group();
-				if (isValidDate(date)) {
-					val = new String[2];
-					val[0] = date;
+			matcher.find();
+			matcher.find();
+			String date = matcher.group();
+			if (isValidDate(date)) {
+				val = new String[2];
+				val[0] = date;
 
-					Matcher matcher_batch = p3.matcher(name);
-					if (matcher_batch.find()) {
-						String batch = matcher_batch.group();
-						val[1] = batch.substring(1, batch.length()-1);
-					}
+				Matcher matcher_batch = p3.matcher(name);
+				if (matcher_batch.find()) {
+					String batch = matcher_batch.group();
+					val[1] = batch.substring(1, batch.length()-1);
 				}
+			}
+		}
 
+		return val;
+	}
+	
+	private String[] parseFileNameStoreWorkshop2(String name) {
+		String[] val = null;
+
+		String regex = "2\\D+-\\d{4}-\\d{1,2}-\\d{1,2}-\\(\\d{4}-\\d{1,2}-\\d{1,2}\\)-\\(\\d+\\).xls";
+		String regex_date = "\\d{4}-\\d{1,2}\\-\\d{1,2}";
+		String regex_batch = "\\(\\d+\\)";
+
+		Pattern p1 = Pattern.compile(regex);
+		Pattern p2 = Pattern.compile(regex_date);
+		Pattern p3 = Pattern.compile(regex_batch);
+		if (p1.matcher(name).matches()) {
+			Matcher matcher = p2.matcher(name);
+			matcher.find();
+			matcher.find();
+			String date = matcher.group();
+			if (isValidDate(date)) {
+				val = new String[2];
+				val[0] = date;
+
+				Matcher matcher_batch = p3.matcher(name);
+				if (matcher_batch.find()) {
+					String batch = matcher_batch.group();
+					val[1] = batch.substring(1, batch.length()-1);
+				}
 			}
 
 		}
@@ -178,7 +207,7 @@ public class ExcelServiceImpl implements ExcelService {
 		return ls;
 	}
 
-	private List<StoreProductionInfo> parseProductionLineStore(String date, String batch, InputStream inputStream) {
+	private List<StoreProductionInfo> parseProductionLineStore(String date, String batch, InputStream inputStream,String worksop) {
 		List<StoreProductionInfo> ls = new ArrayList<>();
 		Workbook workbook;
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -197,7 +226,7 @@ public class ExcelServiceImpl implements ExcelService {
 					val = sheet.getCell(index++, i).getContents();
 					productionInfo.setTasknumber(val);
 
-					productionInfo.setWorkshop(WORKSHOP.WORKSHOP2);
+					productionInfo.setWorkshop(worksop);
 
 					val = sheet.getCell(index++, i).getContents();
 					productionInfo.setProductcode(val);
@@ -300,58 +329,6 @@ public class ExcelServiceImpl implements ExcelService {
 
 		return ls;
 
-	}
-
-	@Override
-	public ReturnData<UnLoadingInfo> uploadProductionInfoStore(String name, InputStream inputStream) {
-		ReturnData<UnLoadingInfo> returnData = new ReturnData<>();
-
-		if (name == null) {
-			returnData.setReturn_msg("文件名错误");
-			returnData.setReturn_code(MESSAGE.RETURN_FAIL);
-			return returnData;
-		}
-		System.out.println("parseFileNameStore");
-		String[] val = parseFileNameStore(name);
-		if (val == null) {
-			returnData.setReturn_msg("文件名错误");
-			returnData.setReturn_code(MESSAGE.RETURN_FAIL);
-			return returnData;
-		}
-
-		// 解析excel数据并保存到数据库
-		List<StoreProductionInfo> ls = parseProductionLineStore(val[0], val[1], inputStream);
-		if (ls.isEmpty()) {
-			returnData.setReturn_msg("文件内容解析出错");
-			returnData.setReturn_code(MESSAGE.RETURN_FAIL);
-			return returnData;
-		}
-		productionInfoDaoImpl.updateStoreProductionInfoList(ls, val[0],val[1]);
-		
-		List<RdRecord> rdRecordls = erpDaoImpl.getRdRecord(ls);
-		List<UnLoadingInfo> unLoadingInfols = erpDaoImpl.getRdRecords(rdRecordls);
-		unLoadingInfols = erpDaoImpl.updateUnLoadingInfo(unLoadingInfols);
-		unLoadingInfols = storeKeeperDaoImpl.getALLUnLoadingInfo(unLoadingInfols);
-		unloadingInfoDaoImpl.updateUnLoadingInfoList(unLoadingInfols,val[0],val[1]);
-		
-		System.out.println("xls parse size:"+ls.size());
-		System.out.println("rds parse size:"+rdRecordls.size());
-		System.out.println("unLoadingInfols parse size:"+unLoadingInfols.size());
-		
-
-		{
-			// 生成当天的unloadinfo并保存到数据可以
-			// 1. 根据生产产品的ID查找所需要meterial ID；
-			// 2. 根据metrailID 查找storekeeper数据库 绑定 保管员
-			// 3.保存到unloadinfo数据库；
-			returnData.setReturn_msg("文件上传成功");
-			returnData.setReturn_code(MESSAGE.RETURN_SUCCESS);
-//			List<UnLoadingInfo> lsa = unloadingInfoDaoImpl.getAllUnLoadingInfoByDate("2016-08-25");
-			// returnData.setData(lsa);
-			
-		}
-
-		return returnData;
 	}
 
 	@Override
@@ -482,6 +459,73 @@ public class ExcelServiceImpl implements ExcelService {
 
 		// returnData.setData(ls);
 
+		return returnData;
+	}
+	
+	@Override
+	public ReturnData<UnLoadingInfo> uploadProductionInfoStore(String name, InputStream inputStream) {
+		ReturnData<UnLoadingInfo> returnData = new ReturnData<>();
+		int workshop = 0;
+		if (name == null) {
+			returnData.setReturn_msg("文件名错误");
+			returnData.setReturn_code(MESSAGE.RETURN_FAIL);
+			return returnData;
+		}
+		
+		String[] val = parseFileNameStoreWorkshop1(name);
+		if (val == null) {
+			val = parseFileNameStoreWorkshop2(name);
+			if(val == null){
+				System.out.println("文件错误");
+				returnData.setReturn_msg("文件名错误");
+				returnData.setReturn_code(MESSAGE.RETURN_FAIL);
+				return returnData;
+			}else{
+				workshop = 2;
+			}
+		}else{
+			workshop = 1;
+		}
+		System.out.println("parseFileNameStore "+workshop+" "+val[0]+" "+val[1]);
+		
+		
+
+//		 解析excel数据并保存到数据库
+		List<StoreProductionInfo> ls = null;
+		if(workshop == 1){
+			 ls = parseProductionLineStore(val[0], val[1], inputStream,WORKSHOP.WORKSHOP1);
+		}else{
+			 ls = parseProductionLineStore(val[0], val[1], inputStream,WORKSHOP.WORKSHOP2);
+		}
+		if (ls.isEmpty()) {
+			returnData.setReturn_msg("文件内容解析出错");
+			returnData.setReturn_code(MESSAGE.RETURN_FAIL);
+			return returnData;
+		}
+		productionInfoDaoImpl.updateStoreProductionInfoList(ls, val[0],val[1]);
+//		
+		List<RdRecord> rdRecordls = erpDaoImpl.getRdRecord(ls);
+		List<UnLoadingInfo> unLoadingInfols = erpDaoImpl.getRdRecords(rdRecordls);
+		unLoadingInfols = erpDaoImpl.updateUnLoadingInfo(unLoadingInfols);
+		unLoadingInfols = storeKeeperDaoImpl.getALLUnLoadingInfo(unLoadingInfols);
+		unloadingInfoDaoImpl.updateUnLoadingInfoList(unLoadingInfols,val[0],val[1]);
+//		
+		System.out.println("xls parse size:"+ls.size());
+		System.out.println("rds parse size:"+rdRecordls.size());
+		System.out.println("unLoadingInfols parse size:"+unLoadingInfols.size());
+//		
+//
+//		{
+//			// 生成当天的unloadinfo并保存到数据可以
+//			// 1. 根据生产产品的ID查找所需要meterial ID；
+//			// 2. 根据metrailID 查找storekeeper数据库 绑定 保管员
+//			// 3.保存到unloadinfo数据库；
+			returnData.setReturn_msg("文件上传成功");
+			returnData.setReturn_code(MESSAGE.RETURN_SUCCESS);
+//			List<UnLoadingInfo> lsa = unloadingInfoDaoImpl.getAllUnLoadingInfoByDate("2016-08-25");
+			// returnData.setData(lsa);
+//			
+//		}
 		return returnData;
 	}
 

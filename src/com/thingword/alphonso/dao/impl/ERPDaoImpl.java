@@ -89,11 +89,11 @@ public class ERPDaoImpl implements ERPDao {
 					rdRecord.setDate(storeProductionInfo.getDate());
 					rdRecord.setShop(storeProductionInfo.getWorkshop());
 					rdRecord.setLinenum(storeProductionInfo.getProductline());
-//					 System.out.println(rdRecord.getID()+" maker:"+rdRecord.getcMaker()+" handler:"+rdRecord.getcHandler()
-//					 +" date:"+rdRecord.getdVeriDate());
+					 System.out.println("rdRecord maker:"+rdRecord.getcMaker()+" handler:"+rdRecord.getcHandler()
+					 +" date:"+rdRecord.getdVeriDate());
 					recordls.add(rdRecord);
 				}
-//				System.out.println("******************************************");
+				System.out.println("******************************************");
 			}
 
 			t.commit();
