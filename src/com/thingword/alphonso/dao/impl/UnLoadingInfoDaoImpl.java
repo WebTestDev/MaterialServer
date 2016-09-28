@@ -1,5 +1,6 @@
 package com.thingword.alphonso.dao.impl;
 
+import java.util.HashSet;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -10,6 +11,7 @@ import org.hibernate.Transaction;
 import com.thingword.alphonso.bean.LoadingInfo;
 import com.thingword.alphonso.bean.ProductionInfo;
 import com.thingword.alphonso.bean.UnLoadingInfo;
+import com.thingword.alphonso.bean.User;
 import com.thingword.alphonso.dao.UnLoadingInfoDao;
 import com.thingword.alphonso.util.HibernateUtil;
 
@@ -105,6 +107,55 @@ public class UnLoadingInfoDaoImpl implements UnLoadingInfoDao{
 			s.close();
 		}
 		return flag;
+	}
+
+	@Override
+	public HashSet<String> getUploadBatchInfoByDate(String Date) {
+		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();   
+        Session s = null;  
+        Transaction t = null;  
+        List<UnLoadingInfo> ls = null; 
+        HashSet<String> set = new HashSet<>();
+        try{  
+         s = sessionFactory.openSession();  
+         t = s.beginTransaction();  
+         String hql = "From UnLoadingInfo where date = '"+Date+"'";    
+         Query query = s.createQuery(hql);   
+         ls = query.list();    
+         t.commit();  
+        }catch(Exception err){  
+        t.rollback();  
+        err.printStackTrace();  
+        }finally{  
+        s.close();  
+        }  
+        for(UnLoadingInfo unLoadingInfo:ls){
+        	set.add(unLoadingInfo.getUploadbatch());
+        }
+        return set; 
+	}
+
+	@Override
+	public List<UnLoadingInfo> getUploadBatchInfoByDateAndUploadBatch(String Date,String uploadbatch) {
+		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();   
+        Session s = null;  
+        Transaction t = null;  
+        List<UnLoadingInfo> ls = null; 
+        try{  
+         s = sessionFactory.openSession();  
+         t = s.beginTransaction();  
+         String hql = "From UnLoadingInfo where date = '"+Date+"' and uploadbatch = '"+uploadbatch+"'";  
+//         System.out.println(hql);
+         Query query = s.createQuery(hql);   
+         ls = query.list();    
+         t.commit();  
+        }catch(Exception err){  
+        t.rollback();  
+        err.printStackTrace();  
+        }finally{  
+        s.close();  
+        }  
+        return ls; 
 	}
 	
 

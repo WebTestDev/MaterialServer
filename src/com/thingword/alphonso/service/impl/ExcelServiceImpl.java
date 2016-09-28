@@ -21,6 +21,7 @@ import com.thingword.alphonso.Configure.WORKSHOP;
 import com.thingword.alphonso.bean.LoadingInfo;
 import com.thingword.alphonso.bean.ProductInfoDetail;
 import com.thingword.alphonso.bean.ProductionInfo;
+import com.thingword.alphonso.bean.StoreKeeper;
 import com.thingword.alphonso.bean.StoreProductionInfo;
 import com.thingword.alphonso.bean.UnLoadingInfo;
 import com.thingword.alphonso.bean2.RdRecord;
@@ -172,12 +173,12 @@ public class ExcelServiceImpl implements ExcelService {
 				int index = 1;
 				Cell cell = sheet.getCell(index++, i);
 				String val = cell.getContents();
-				if (!val.isEmpty()) {
+				cell = sheet.getCell(index++, i);
+				String code = cell.getContents();
+				if (!val.isEmpty() && !code.isEmpty()) {
 					ProductionInfo productionInfo = new ProductionInfo();
 					productionInfo.setProductline(val);
-
-					val = sheet.getCell(index++, i).getContents();
-					productionInfo.setTasknumber(val);
+					productionInfo.setTasknumber(code);
 
 					productionInfo.setWorkshop(WORKSHOP.WORKSHOP2);
 
@@ -249,6 +250,47 @@ public class ExcelServiceImpl implements ExcelService {
 
 					productionInfo.setDate(Date.valueOf(date));
 					ls.add(productionInfo);
+				}
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return ls;
+	}
+	
+	private List<StoreKeeper> parseStoreKeeper( InputStream inputStream) {
+		List<StoreKeeper> ls = new ArrayList<>();
+		Workbook workbook;
+		try {
+			workbook = Workbook.getWorkbook(inputStream);
+			Sheet sheet = workbook.getSheet(0);
+			for (int i = 1; i < sheet.getRows(); i++) {
+				int index = 1;
+				Cell cell = sheet.getCell(index++, i);
+				String val = cell.getContents();
+				if (!val.isEmpty()) {
+					StoreKeeper storeKeeper = new StoreKeeper();
+					storeKeeper.setRepository(val);
+					
+					val = sheet.getCell(index++, i).getContents();
+					storeKeeper.setMaterialnumber(val);
+					
+					val = sheet.getCell(index++, i).getContents();
+					storeKeeper.setMaterialname(val);
+					
+					val = sheet.getCell(index++, i).getContents();
+					storeKeeper.setLocation(val);
+					
+					val = sheet.getCell(index++, i).getContents();
+					storeKeeper.setSpec(val);
+					
+					val = sheet.getCell(index++, i).getContents();
+					storeKeeper.setStorekeeper(val);
+					
+					val = sheet.getCell(index++, i).getContents();
+					storeKeeper.setIdentifier(val);
+					ls.add(storeKeeper);
 				}
 			}
 		} catch (Exception e) {
@@ -413,7 +455,7 @@ public class ExcelServiceImpl implements ExcelService {
 //			System.out.println("2"+name);
 			date = parseFileNameWorkShop2(name);
 			if(date == null){
-				System.out.println("3"+name);
+//				System.out.println("3"+name);
 				returnData.setReturn_msg("文件名错误");
 				returnData.setReturn_code(MESSAGE.RETURN_FAIL);
 				return returnData;
@@ -439,7 +481,7 @@ public class ExcelServiceImpl implements ExcelService {
 		}
 		returnData.setReturn_msg("文件上传成功");
 		returnData.setReturn_code(MESSAGE.RETURN_SUCCESS);
-		System.out.println("workshop "+workshop);
+//		System.out.println("workshop "+workshop);
 		if(workshop == 1){
 			productionInfoDaoImpl.updateProductionInfoList(ls, date, WORKSHOP.WORKSHOP1);
 		}else{
@@ -476,7 +518,7 @@ public class ExcelServiceImpl implements ExcelService {
 		if (val == null) {
 			val = parseFileNameStoreWorkshop2(name);
 			if(val == null){
-				System.out.println("文件错误");
+//				System.out.println("文件错误");
 				returnData.setReturn_msg("文件名错误");
 				returnData.setReturn_code(MESSAGE.RETURN_FAIL);
 				return returnData;
@@ -486,7 +528,7 @@ public class ExcelServiceImpl implements ExcelService {
 		}else{
 			workshop = 1;
 		}
-		System.out.println("parseFileNameStore "+workshop+" "+val[0]+" "+val[1]);
+//		System.out.println("parseFileNameStore "+workshop+" "+val[0]+" "+val[1]);
 		
 		
 
@@ -504,15 +546,15 @@ public class ExcelServiceImpl implements ExcelService {
 		}
 		productionInfoDaoImpl.updateStoreProductionInfoList(ls, val[0],val[1]);
 //		
-//		List<RdRecord> rdRecordls = erpDaoImpl.getRdRecord(ls);
-//		List<UnLoadingInfo> unLoadingInfols = erpDaoImpl.getRdRecords(rdRecordls);
-//		unLoadingInfols = erpDaoImpl.updateUnLoadingInfo(unLoadingInfols);
-//		unLoadingInfols = storeKeeperDaoImpl.getALLUnLoadingInfo(unLoadingInfols);
-//		unloadingInfoDaoImpl.updateUnLoadingInfoList(unLoadingInfols,val[0],val[1]);
-////		
-//		System.out.println("xls parse size:"+ls.size());
-//		System.out.println("rds parse size:"+rdRecordls.size());
-//		System.out.println("unLoadingInfols parse size:"+unLoadingInfols.size());
+		List<RdRecord> rdRecordls = erpDaoImpl.getRdRecord(ls);
+		List<UnLoadingInfo> unLoadingInfols = erpDaoImpl.getRdRecords(rdRecordls);
+		unLoadingInfols = erpDaoImpl.updateUnLoadingInfo(unLoadingInfols);
+		unLoadingInfols = storeKeeperDaoImpl.getALLUnLoadingInfo(unLoadingInfols);
+		unloadingInfoDaoImpl.updateUnLoadingInfoList(unLoadingInfols,val[0],val[1]);
+//		
+		System.out.println("xls parse size:"+ls.size());
+		System.out.println("rds parse size:"+rdRecordls.size());
+		System.out.println("unLoadingInfols parse size:"+unLoadingInfols.size());
 //		
 //
 //		{
@@ -526,6 +568,17 @@ public class ExcelServiceImpl implements ExcelService {
 			// returnData.setData(lsa);
 //			
 //		}
+		return returnData;
+	}
+
+	@Override
+	public ReturnData<StoreKeeper> uploadStoreKeeperInfo(String name, InputStream inputStream) {
+		ReturnData<StoreKeeper> returnData = new ReturnData<>();
+		returnData.setReturn_msg("文件上传成功");
+		returnData.setReturn_code(MESSAGE.RETURN_SUCCESS);
+		List<StoreKeeper> ls= parseStoreKeeper(inputStream);
+		storeKeeperDaoImpl.updateUnLoadingInfoList(ls);
+		System.out.println("uploadStoreKeeperInfo size:"+ls.size());
 		return returnData;
 	}
 

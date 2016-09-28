@@ -72,7 +72,7 @@ public class ProductionInfoDaoImpl implements ProductionInfoDao {
 			s = sessionFactory.openSession();
 			t = s.beginTransaction();
 			String hql = "delete from ProductionInfo where date = '" + Date + "'" + "and workshop = '" + workshop + "'";
-			System.out.println(hql);
+//			System.out.println(hql);
 			s.createQuery(hql).executeUpdate();
 			t.commit();
 			flag = true;
@@ -121,8 +121,8 @@ public class ProductionInfoDaoImpl implements ProductionInfoDao {
 			Query query = s.createQuery(hql);
 			ls = query.list();
 			t.commit();
-			System.out.println(hql);
-			System.out.println("size:"+ls.size());
+//			System.out.println(hql);
+//			System.out.println("size:"+ls.size());
 		} catch (Exception err) {
 			t.rollback();
 			err.printStackTrace();
@@ -238,7 +238,7 @@ public class ProductionInfoDaoImpl implements ProductionInfoDao {
 			t = s.beginTransaction();
 			String hql = "delete from ProductInfoDetail where date = '" + Date
 					+ "' and workshop = '"+workshop +"'" ;
-			System.out.println(hql);
+//			System.out.println(hql);
 			s.createQuery(hql).executeUpdate();
 			t.commit();
 			flag = true;

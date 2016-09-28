@@ -74,7 +74,7 @@ public class UserDaoImpl implements UserDao {
 			t = s.beginTransaction();
 			s.save(user);
 			t.commit();
-			System.out.println("userID:"+user.getUserID());
+//			System.out.println("userID:"+user.getUserID());
 		} catch (Exception err) {
 			t.rollback();
 			err.printStackTrace();
@@ -160,7 +160,7 @@ public class UserDaoImpl implements UserDao {
 			s = sessionFactory.openSession();
 			t = s.beginTransaction();
 			String hql = "from User where username = '" + name + "'" + "and passwd = '" + passwd + "'";
-			System.out.println(hql);
+//			System.out.println(hql);
 			Query query = s.createQuery(hql);
 			user = (User) query.uniqueResult();
 			t.commit();

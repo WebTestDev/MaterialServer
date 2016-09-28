@@ -25,6 +25,7 @@ import com.thingword.alphonso.Configure.ReqAddUser;
 import com.thingword.alphonso.Configure.ReqDelUser;
 import com.thingword.alphonso.Configure.ReqInfo;
 import com.thingword.alphonso.Configure.ReqUpdateUser;
+import com.thingword.alphonso.Configure.ReturnBatchData;
 import com.thingword.alphonso.Configure.ReturnData;
 import com.thingword.alphonso.Configure.ReturnLoginInfo;
 import com.thingword.alphonso.Configure.ReturnMessage;
@@ -117,6 +118,14 @@ public class UserResource {
 		return unloadingInfoServiceImpl.getUnLoadingInfoByDate(reqInfo);
 	}
 	
+	@POST
+	@Path("/reqUnLoadingInfoByBatch")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public ReturnBatchData<UnLoadingInfo> reqUnLoadingInfoByBatch(ReqInfo reqInfo) {
+		return unloadingInfoServiceImpl.getBatchUnLoadingInfoByDate(reqInfo);
+	}
+	
 	@GET
 	@Path("/reqStorekeeperInfo")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -183,17 +192,16 @@ public class UserResource {
 		return productionInfoServiceImpl.getProductionInfoByDate(reqInfo.getDate());
 	}
 	
-//	@POST
-//	@Path("/upload")
-//	@Consumes(MediaType.MULTIPART_FORM_DATA)
-//	public Response uploadFile(@FormDataParam("file") InputStream uploadedInputStream,
-//			@FormDataParam("file") FormDataContentDisposition fileDetail) {
-//
-//		ReturnMessage returnMessage = excelServiceImpl.uploadProductionInfo(fileDetail.getFileName(),
-//				uploadedInputStream);
-//		return Response.status(200).entity(returnMessage.getReturn_msg()).build();
-//
-//	}
+	@POST
+	@Path("/uploadStoreKeeperList")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	public Response uploadFile(@FormDataParam("filepath") InputStream uploadedInputStream,
+			@FormDataParam("filepath") FormDataContentDisposition fileDetail) {
+		 excelServiceImpl.uploadStoreKeeperInfo(fileDetail.getFileName(),
+				uploadedInputStream);
+		return Response.status(200).build();
+
+	}
 	
 	@POST
 	@Path("/uploadProductionInfoForStore")

@@ -24,7 +24,7 @@ public class ProductionInfoServiceImpl implements ProductionInfoService{
 		ReturnData<ProductionInfo> returnData= new ReturnData<>();
 			
 		List<ProductionInfo> ls= productionInfoDaoImpl.getProductionInfoByDate(Date);
-		System.out.println("getProductionInfoByDate:"+ls.size());
+//		System.out.println("getProductionInfoByDate:"+ls.size());
 		returnData.setReturn_code(MESSAGE.RETURN_FAIL);
 		returnData.setReturn_msg(MESSAGE.QUERY_NONE);
 		if(ls != null){

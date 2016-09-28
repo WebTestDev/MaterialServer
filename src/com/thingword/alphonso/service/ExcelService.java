@@ -6,6 +6,7 @@ import com.thingword.alphonso.Configure.ReturnData;
 import com.thingword.alphonso.Configure.ReturnMessage;
 import com.thingword.alphonso.bean.LoadingInfo;
 import com.thingword.alphonso.bean.ProductionInfo;
+import com.thingword.alphonso.bean.StoreKeeper;
 import com.thingword.alphonso.bean.UnLoadingInfo;
 
 public interface ExcelService {
@@ -17,4 +18,5 @@ public interface ExcelService {
 	
 	public ReturnData<ProductionInfo> uploadProductionInfo(String naem,InputStream inputStream);
 	
+	public ReturnData<StoreKeeper> uploadStoreKeeperInfo(String name,InputStream inputStream);
 }

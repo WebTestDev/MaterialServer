@@ -28,7 +28,7 @@ public class StoreKeeperDaoImpl implements StoreKeeperDao{
          s = sessionFactory.openSession();  
          t = s.beginTransaction();  
          String hql = "From StoreKeeper ";//where location = '"+"HXK'";  
-         System.out.println(hql);
+//         System.out.println(hql);
          Query query = s.createQuery(hql);   
          ls = query.list();    
          t.commit();  
@@ -67,6 +67,52 @@ public class StoreKeeperDaoImpl implements StoreKeeperDao{
 			s.close();
 		}
 		return ls;
+	}
+
+	@Override
+	public boolean updateUnLoadingInfoList(List<StoreKeeper> ls) {
+		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+		Session s = null;
+		Transaction t = null;
+		boolean flag = false;
+		deleteUnLoadingInfo();
+		try {
+			s = sessionFactory.openSession();
+			t = s.beginTransaction();
+			for (StoreKeeper storeKeeper : ls){
+				s.save(storeKeeper);
+			}
+			t.commit();
+			flag = true;
+		} catch (Exception err) {
+			t.rollback();
+			err.printStackTrace();
+		} finally {
+			s.close();
+		}
+		return flag;
+	}
+
+	@Override
+	public boolean deleteUnLoadingInfo() {
+		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+		Session s = null;
+		Transaction t = null;
+		boolean flag = false;
+		try {
+			s = sessionFactory.openSession();
+			t = s.beginTransaction();
+			String hql = "delete from StoreKeeper ";
+			s.createQuery(hql).executeUpdate();
+			t.commit();
+			flag = true;
+		} catch (Exception err) {
+			t.rollback();
+			err.printStackTrace();
+		} finally {
+			s.close();
+		}
+		return flag;
 	}
 
 }

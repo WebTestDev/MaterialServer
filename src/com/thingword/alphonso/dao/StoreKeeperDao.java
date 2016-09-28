@@ -12,4 +12,8 @@ public interface StoreKeeperDao {
 	public List<StoreKeeper> getStoreKeeperList();  
 	
 	public List<UnLoadingInfo> getALLUnLoadingInfo(List<UnLoadingInfo> ls);  
+	
+	public boolean updateUnLoadingInfoList(List<StoreKeeper> ls);
+	
+	public boolean deleteUnLoadingInfo();
 }

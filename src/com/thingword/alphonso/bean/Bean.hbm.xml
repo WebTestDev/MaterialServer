@@ -7,7 +7,7 @@
 
 	<class name="User" table="userinfo">
 		<id name="userID" column="Id" type="int">
-			<generator class="increment" />
+			<generator class="native" />
 		</id>
 		<property name="username" type="string" />
 		<property name="passwd" type="string" />
@@ -18,7 +18,7 @@
 
 	<class name="LoadingInfo" table="loadinginfo">
 		<id name="Id" column="Id" type="int">
-			<generator class="increment" />
+			<generator class="native" />
 		</id>
 		<property name="cBatch" type="string" />
 		<property name="date" type="date" />
@@ -30,7 +30,7 @@
 
 	<class name="UnLoadingInfo" table="unloadinginfo">
 		<id name="Id" column="Id" type="int">
-			<generator class="increment" />
+			<generator class="native" />
 		</id>
 		<property name="cBatch" type="string" />
 		<property name="date" type="date" />
@@ -49,7 +49,7 @@
 
 	<class name="DistributionInfo" table="distriinfo">
 		<id name="Id" column="Id" type="int">
-			<generator class="increment" />
+			<generator class="native" />
 		</id>
 		<property name="cBatch" type="string" />
 		<property name="date" type="date" />
@@ -65,7 +65,7 @@
 
 	<class name="ProductionInfo" table="productioninfo">
 		<id name="Id" column="Id" type="int">
-			<generator class="increment" />
+			<generator class="native" />
 		</id>
 		<property name="workshop" type="string" />
 		<property name="date" type="date" />
@@ -82,7 +82,7 @@
 
 	<class name="StoreKeeper" table="storekeeper">
 		<id name="Id" column="Id" type="int">
-			<generator class="increment" />
+			<generator class="native" />
 		</id>
 		<property name="storekeeper" type="string" />
 		<property name="identifier" type="string" />
@@ -95,7 +95,7 @@
 
 	<class name="StoreProductionInfo" table="storeproductioninfo">
 		<id name="Id" column="Id" type="int">
-			<generator class="increment" />
+			<generator class="native" />
 		</id>
 		<property name="workshop" type="string" />
 		<property name="date" type="date" />
@@ -113,7 +113,7 @@
 
 	<class name="ProductInfoDetail" table="productioninfodetail">
 		<id name="Id" column="Id" type="int">
-			<generator class="increment" />
+			<generator class="native" />
 		</id>
 		<property name="tasknumber" type="string" />
 		<property name="date" type="date" />

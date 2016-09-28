@@ -89,11 +89,11 @@ public class ERPDaoImpl implements ERPDao {
 					rdRecord.setDate(storeProductionInfo.getDate());
 					rdRecord.setShop(storeProductionInfo.getWorkshop());
 					rdRecord.setLinenum(storeProductionInfo.getProductline());
-					 System.out.println("rdRecord maker:"+rdRecord.getcMaker()+" handler:"+rdRecord.getcHandler()
-					 +" date:"+rdRecord.getdVeriDate());
+//					 System.out.println("rdRecord maker:"+rdRecord.getcMaker()+" handler:"+rdRecord.getcHandler()
+//					 +" date:"+rdRecord.getdVeriDate());
 					recordls.add(rdRecord);
 				}
-				System.out.println("******************************************");
+//				System.out.println("******************************************");
 			}
 
 			t.commit();
@@ -135,9 +135,9 @@ public class ERPDaoImpl implements ERPDao {
 					unLoadingInfo.setiQuantity(String.valueOf(rdRecords.getiQuantity()));
 					unLoadingInfo.setcInvCode(rdRecords.getcInvCode());
 					unLoadingInfols.add(unLoadingInfo);
-					 System.out.println(rdRecord.getID()+" "+rdRecords.getcInvCode());
+//					 System.out.println(rdRecord.getID()+" "+rdRecords.getcInvCode());
 				}
-				System.out.println("******************************************");
+//				System.out.println("******************************************");
 			}
 			t.commit();
 		} catch (Exception err) {
@@ -205,7 +205,7 @@ public class ERPDaoImpl implements ERPDao {
 					vOrderDetail.setMoDid(res);
 					vOrderDetail.setWorkshop(productionInfo.getWorkshop());
 					vOrderDetail.setLinenum(productionInfo.getProductline());
-					System.out.println(vOrderDetail.getMoDid()+" "+vOrderDetail.getDate());
+//					System.out.println(vOrderDetail.getMoDid()+" "+vOrderDetail.getDate());
 					vOrderDetaills.add(vOrderDetail);
 					
 				}
@@ -249,7 +249,7 @@ public class ERPDaoImpl implements ERPDao {
 //					System.out.println(productInfoDetail.getInvcode()+" "+productInfoDetail.getInvname());
 					productInfoDetaills.add(productInfoDetail);
 				}
-				System.out.println("*****************************");
+//				System.out.println("*****************************");
 			}
 			t.commit();
 		} catch (Exception err) {
