@@ -13,4 +13,6 @@ public interface ProductionInfoService {
 	public ReturnData<ProductInfoDetail> getProductInfoDetailByDateAndLine(String Date,String Line) ;
 	
 	public ReturnData<StoreProductionInfo> getStoreProductionInfoByDate(String Date) ;
+	
+	public ReturnData<ProductInfoDetail> getProductionDetailByTasknumAndProductcode(ProductionInfo productionInfo); 
 }
