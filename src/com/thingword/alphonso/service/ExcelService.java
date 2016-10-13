@@ -4,6 +4,7 @@ import java.io.InputStream;
 
 import com.thingword.alphonso.Configure.ReturnData;
 import com.thingword.alphonso.Configure.ReturnMessage;
+import com.thingword.alphonso.bean.AuxiliaryInfo;
 import com.thingword.alphonso.bean.LoadingInfo;
 import com.thingword.alphonso.bean.ProductionInfo;
 import com.thingword.alphonso.bean.StoreKeeper;
@@ -19,4 +20,8 @@ public interface ExcelService {
 	public ReturnData<ProductionInfo> uploadProductionInfo(String naem,InputStream inputStream);
 	
 	public ReturnData<StoreKeeper> uploadStoreKeeperInfo(String name,InputStream inputStream);
+	
+	public ReturnData<AuxiliaryInfo> uploadAuxiliaryInfo(String name,InputStream inputStream);
+	
+	public ReturnData<AuxiliaryInfo> getAllAuxiliaryInfo();
 }

@@ -46,17 +46,28 @@ $(function() {
     }
 });
 
+// 账户管理
 $(document).ready(function() {
-    $('#dataTables-example').DataTable({
-        "ajax" : "/TestServer/rest/materail/reqUserList",
-        "bDestroy":true,
-        "responsive" : true,
-        "language" : {
-            "url" : "Chinese.json"
-        }
+    // 初始化账户管理表格
+    var table = $('#dataTables-account').DataTable({
+            "ajax" : "/TestServer/rest/materail/reqUserList",
+            "bDestroy":true,
+            "responsive" : true,
+            "iDisplayLength" : 100, //默认显示的记录数
+            "language" : {
+                "url" : "Chinese.json"
+            },
+            "columns": [
+                { "data": null, "title":"","defaultContent":"<input type='checkbox' name='' value='0' />"},
+                { "data": "userID", "title":"id","defaultContent":""},
+                { "data": "username", "title":"账号","defaultContent":""},
+                { "data": "passwd", "title":"密码","defaultContent":""},
+                { "data": "employname", "title":"仓管员","defaultContent":""},
+                { "data": "authority", "title":"权限","defaultContent":""}
+            ]
     });
-    var table = $('#dataTables-example').DataTable();
-    $('#dataTables-example tbody').on('click', 'tr', function() {
+    // 表格行选中
+    $('#dataTables-account tbody').on('click', 'tr', function() {
         if ($(this).hasClass('selected')) {
             $(this).removeClass('selected');
             $(this).find("input").prop('checked', false);
@@ -71,8 +82,7 @@ $(document).ready(function() {
     br[0] = "<span id='rights1'>仓库</span>";
     br[1] = "<span id='rights2'>配料</span>";
     br[2] = "<span id='rights3'>产线</span>";
-    var check = "<input type='checkbox' value=''>";
-    // br[3] = '<span id="rights4">权限4</span>';
+    // 模态框数据不能为空，提示设置
     $('[type=text]:input').blur(function(){
         if($(this).val() == ""){
             $(this).next().show();
@@ -85,16 +95,17 @@ $(document).ready(function() {
             $(this).removeClass("inputbdc");
         }
     })
+    // 添加
     $('#add-button').click(function() {
         var add_name = $('#add_name').val();
-        var add_num = $('#add_num').val();
         var add_account = $('#add_account').val();
         var add_password = $('#add_password').val();
         var add_rights = '';
         $('[name=items]:checkbox:checked').each(function() {
             add_rights += br[$(this).val()] + " ";
         })
-        if((add_name == "") || (add_num == "") || (add_account == "") || (add_password == "")){
+        // 如果数据为空提示
+        if((add_name == "") || (add_account == "") || (add_password == "")){
             $('[id^=add_]:input').each(function(){
                 if($(this).val() == ""){
                     $(this).next().show();
@@ -103,28 +114,30 @@ $(document).ready(function() {
             })
         }
         else{
-            $('#myModal').modal('hide');
+            // 如果数据不为空添加
+            $('#add-Modal').modal('hide');
+            // 模态框清空
             $('[type=text]:input').val("");
             $('[name=items]:checkbox').prop('checked', false);
+            // 添加的数据
             var jsonData = {
                 "add_name" : add_name,
-                "add_num" : add_num,
                 "add_account" : add_account,
                 "add_password" : add_password,
                 "add_rights" : add_rights
             };
-             $.ajax({
+            $.ajax({
                 url : "/TestServer/rest/materail/reqAddUser",
                 data : JSON.stringify(jsonData),
                 type : "post",
                 contentType : "application/json",
                 dataType : "json",
                 success : function(backdata) {
-                    if (backdata.data[0].length > 0) {
+                    if (backdata.data.length > 0) {
                         table.row.add(backdata.data[0]).draw();
                     } else {
                         $("#ifo").html("插入失败！");
-                        $('#myModal3').modal();
+                        $('#ifo-Modal').modal();
                     }
                 },
                 error : function(error) {
@@ -133,9 +146,12 @@ $(document).ready(function() {
             });
         }
     });
+    // 删除
     $('#delete').click(function() {
+        // 如果有行被选中
         if (table.row('.selected').length > 0) {
-            var tid = table.row('.selected').data()[1];
+            // 获取选中行的id
+            var tid = table.row('.selected').data().userID;
             $.ajax({
                 url : "/TestServer/rest/materail/reqDelUser",
                 data : JSON.stringify({
@@ -148,52 +164,56 @@ $(document).ready(function() {
                     if (backdata) {
                         table.row('.selected').remove().draw(false);
                         $("#ifo").html("删除成功！");
-                        $('#myModal3').modal();
+                        $('#ifo-Modal').modal();
                     } else {
                         $("#ifo").html("删除失败！");
-                        $('#myModal3').modal();
+                        $('#ifo-Modal').modal();
                     }
                 },
                 error : function(error) {
                     console.log(error);
                 }
             });
+        // 如果没有行被选中，提示
         } else {
             $("#ifo").html("请选中你要删除的行！");
-            $('#myModal3').modal();
+            $('#ifo-Modal').modal();
         }
     });
+    // 编辑模态框显示
     $('#edit').click(function() {
+        // 如果有行被选中
         if (table.row('.selected').length > 0) {
-            $('#myModal2').modal();
+            $('#edit-Modal').modal();
+            //选中行的数据在模态框中显示
+            var tdata = table.row('.selected').data();
+            $('#edit_name').val(tdata.userID);
+            $('#edit_account').val(tdata.username);
+            $('#edit_password').val(tdata.passwd);
+            for (var i = 1; i <= 3; i++) {
+                var s = tdata.authority.indexOf(i);
+                if (s > 0) {
+                    $('[name=item]:checkbox').eq(i - 1).prop('checked', true);
+                }
+            }
+        // 如果没有行被选中，提示
         } else {
             $("#ifo").html("请选中你要修改的行！");
-            $('#myModal3').modal();
-        }
-        var tdata = new Array();
-        tdata = table.row('.selected').data();
-        $('#edit_name').val(tdata[2]);
-        $('#edit_num').val(tdata[3]);
-        $('#edit_account').val(tdata[4]);
-        $('#edit_password').val(tdata[5]);
-        for (var i = 1; i <= 3; i++) {
-            var s = tdata[6].indexOf(i);
-            if (s > 0) {
-                $('[name=item]:checkbox').eq(i - 1).prop('checked', true);
-            }
+            $('#ifo-Modal').modal();
         }
     });
+    // 编辑
     $('#edit-button').click(function() {
-        var edit_id = table.row('.selected').data()[1];
+        var edit_id = table.row('.selected').data().userID;
         var edit_name = $('#edit_name').val();
-        var edit_num = $('#edit_num').val();
         var edit_account = $('#edit_account').val();
         var edit_password = $('#edit_password').val();
         var edit_rights = '';
         $('[name=item]:checkbox:checked').each(function() {
             edit_rights += br[$(this).val()] + " ";
         })
-        if((edit_name == "") || (edit_num == "") || (edit_account == "") || (edit_password == "")){
+        // 如果数据为空提示
+        if((edit_name == "")|| (edit_account == "") || (edit_password == "")){
             $('[id^=edit_]:input').each(function(){
                 if($(this).val() == ""){
                     $(this).next().show();
@@ -201,14 +221,15 @@ $(document).ready(function() {
                 }
             })
         }
+        // 如果数据不为空添加
         else{
-            $('#myModal2').modal('hide');
+            $('#edit-Modal').modal('hide');
             $('[type=text]:input').val("");
             $('[name=items]:checkbox').prop('checked', false);
+            // 编辑的数据
             var jsonData = {
                 "edit_id" : edit_id,
                 "edit_name" : edit_name,
-                "edit_num" : edit_num,
                 "edit_account" : edit_account,
                 "edit_password" : edit_password,
                 "edit_rights" : edit_rights
@@ -220,12 +241,12 @@ $(document).ready(function() {
                 contentType : "application/json",
                 dataType : "json",
                 success : function(backdata) {
-                    if (backdata.data[0].length > 0) {
+                    if (backdata.data.length > 0) {
                         table.row('.selected').remove().draw(false);
                         table.row.add(backdata.data[0]).draw();
                     } else {
                         $("#ifo").html("修改失败！");
-                        $('#myModal3').modal();
+                        $('#ifo-Modal').modal();
                     }
                 },
                 error : function(error) {
@@ -234,7 +255,8 @@ $(document).ready(function() {
             });
         }
     });
-    $('#myModal .empty').click(function() {
+    // 关闭清空模态框数据
+    $('#add-Modal .empty').click(function() {
         $('[type=text]:input').val("");
         $('[name=items]:checkbox').prop('checked', false);
         $('[id^=add_]:input').each(function(){
@@ -242,7 +264,8 @@ $(document).ready(function() {
             $(this).removeClass("inputbdc");
         });
     });
-    $('#myModal2 .empty').click(function() {
+    // 关闭清空模态框数据
+    $('#edit-Modal .empty').click(function() {
         $('[type=text]:input').val("");
         $('[name=item]:checkbox').prop('checked', false);
         $('[id^=edit_]:input').each(function(){
@@ -253,21 +276,22 @@ $(document).ready(function() {
 
 });
 
-
+//显示遮罩层
 function showMask(){
     $("#mask").css("height",$(document).height());
     $("#mask").css("width",$(document).width());
     $("#mask").show();
 }
-    //隐藏遮罩层
+//隐藏遮罩层
 function hideMask(){
     $("#mask").hide();
 }
 
+// 仓库管理文件上传
 function fileloadon() {
         if($("input[type='file']").val() == ""){
-            $("#ifos").html("请选择文件!");
-            $('#myModal4').modal();
+            $("#ifo").html("请选择文件!");
+            $('#ifo-Modal').modal();
             return false;
         }
         showMask();
@@ -277,57 +301,60 @@ function fileloadon() {
             success: function (backdata) {
                 if(backdata.return_code == "fail"){
                     hideMask();
-                    $("#ifos").html(backdata.return_msg);
-                    $('#myModal4').modal();
+                    $("#ifo").html(backdata.return_msg);
+                    $('#ifo-Modal').modal();
                 }
                 if(backdata.return_code == "success")
                 {
                     hideMask();
-                    $("#ifos").html("上传成功！");
-                    $('#myModal4').modal();
+                    $("#ifo").html("上传成功！");
+                    $('#ifo-Modal').modal();
                 }
             },
             error: function (msg) {
                 hideMask();
-                $("#ifos").html("文件上传失败!");
-                $('#myModal4').modal();
+                $("#ifo").html("文件上传失败!");
+                $('#ifo-Modal').modal();
             }
         });
         $(".name").hide();
         $("input[type='file']").val("");
 }
+
+// 辅料管理文件上传
 function fileloadon2() {
         if($("input[type='file']").val() == ""){
-            $("#ifos").html("请选择文件!");
-            $('#myModal4').modal();
+            $("#ifo").html("请选择文件!");
+            $('#ifo-Modal').modal();
             return false;
         }
         showMask();
         $("#_fileForm2").ajaxSubmit({
             type: "post",
-            url: "/TestServer/rest/materail/uploadProductionInfo",
+            url: "/TestServer/rest/materail/uploadAuxiliaryInfo",
             success: function (backdata) {
                 if(backdata.return_code == "fail"){
                     hideMask();
-                    $("#ifos").html(backdata.return_msg);
-                    $('#myModal4').modal();
+                    $("#ifo").html(backdata.return_msg);
+                    $('#ifo-Modal').modal();
                 }
                 if(backdata.return_code == "success"){
                     hideMask();
-                    $("#ifos").html("上传成功！");
-                    $('#myModal4').modal();
+                    $("#ifo").html("上传成功！");
+                    $('#ifo-Modal').modal();
                 }
             },
             error: function (msg) {
                 hideMask();
-                $("#ifos").html("文件上传失败!");
-                $('#myModal4').modal();
+                $("#ifo").html("文件上传失败!");
+                $('#ifo-Modal').modal();
             }
         });
         $(".name").hide();
         $("input[type='file']").val("");
 }
 $(document).ready(function() {
+    // 文件上传名字显示
     $(".file").on("change","input[type='file']",function(){
         var filePath=$(this).val();
         var fileName=filePath.substring(filePath.lastIndexOf("\\")+1);
@@ -338,99 +365,29 @@ $(document).ready(function() {
 })
 
 !function(){
-    laydate.skin('molv');//切换皮肤，请查看skins下面皮肤库
-    laydate({elem: '#date-product'});//绑定元素
-    laydate({elem: '#date-gallery'});//绑定元素
-    $("#datebutton-product").on("click",function(){
-        console.log($("#date-product").val());
-        if($("#date-product").val()){
-            $.ajax({
-                "url" : "/TestServer/rest/materail/reqAllProductionInfo",
-                "data" : JSON.stringify({
-                    "date":$("#date-product").val()}
-                ),
-                "type" : "post",
-                "contentType" : "application/json",
-                "dataType" : "json",
-                success : function(backdata) {
-                    console.log(backdata);
-                if(backdata.return_code == "fail"){
-                    $("#ifos").html(backdata.return_msg);
-                    $('#myModal4').modal();
-                    $('#dataTables-product').DataTable({
-                        "data" :  [],
-                        "bDestroy":true,
-                        "responsive" : true,
-                        "language" : {
-                            "url" : "Chinese.json"
-                        },
-                        "columns": [
-                            { "data": "workshop" },
-                            { "data": "productline" },
-                            { "data": "tasknumber" },
-                            { "data": "productcode" },
-                            { "data": "spec" },
-                            { "data": "schedulednum" },
-                            { "data": "dailynum" },
-                            { "data": "date" },
-                            { "data": "remark" }
-                        ]
-                    });
-                }
-                if(backdata.return_code == "success")
-                {
-                    $('#dataTables-product').DataTable({
-                        "data" :  backdata.data,
-                        "bDestroy":true,
-                        "responsive" : true,
-                        "language" : {
-                            "url" : "Chinese.json"
-                        },
-                        "columns": [
-                            { "data": "workshop" },
-                            { "data": "productline" },
-                            { "data": "tasknumber" },
-                            { "data": "productcode" },
-                            { "data": "spec" },
-                            { "data": "schedulednum" },
-                            { "data": "dailynum" },
-                            { "data": "date" },
-                            { "data": "remark" }
-                        ]
-                    });
-                }
-                },
-                error : function(error) {
-                    console.log(error);
-                    $("#ifos").html("出错了!");
-                    $('#myModal4').modal();
-                    $('#dataTables-product').DataTable({
-                        "data" :  [],
-                        "bDestroy":true,
-                        "responsive" : true,
-                        "language" : {
-                            "url" : "Chinese.json"
-                        },
-                        "columns": [
-                            { "data": "workshop" },
-                            { "data": "productline" },
-                            { "data": "tasknumber" },
-                            { "data": "productcode" },
-                            { "data": "spec" },
-                            { "data": "schedulednum" },
-                            { "data": "dailynum" },
-                            { "data": "date" },
-                            { "data": "remark" }
-                        ]
-                    });
-                }
-            });
-        }
-        else{
-            $("#ifos").html("请选择日期!");
-            $('#myModal4').modal();
-        };
+    // 仓库管理表格初始化
+    var table_gallery=$('#dataTables-gallery').DataTable({
+        "data" :  [],
+        "bDestroy":true,
+        "responsive" : true,
+        "iDisplayLength" : 100, //默认显示的记录数
+        "language" : {
+            "url" : "Chinese.json"
+        },
+        "columns": [
+            { "data": "shopnum" },
+            { "data": "cInvCode" },
+            { "data": "cInvName" },
+            { "data": "cInvStd" },
+            { "data": "iQuantity" },
+            { "data": "cInvDefine8" },
+            { "data": "cBatch" },
+            { "data": "executor" }
+        ]
     });
+    laydate.skin('molv');//切换皮肤，请查看skins下面皮肤库
+    laydate({elem: '#date-gallery'});//绑定元素
+    // 仓库管理
     $("#datebutton-gallery").on("click",function(){
         if($("#date-gallery").val()){
             $.ajax({
@@ -444,26 +401,9 @@ $(document).ready(function() {
                 success : function(backdata) {
                     console.log(backdata);
                 if(backdata.return_code == "fail"){
-                    $("#ifos").html(backdata.return_msg);
-                    $('#myModal4').modal();
-                    $('#dataTables-gallery').DataTable({
-                        "data" :  [],
-                        "bDestroy":true,
-                        "responsive" : true,
-                        "language" : {
-                            "url" : "Chinese.json"
-                        },
-                        "columns": [
-                            { "data": "shopnum" },
-                            { "data": "cInvCode" },
-                            { "data": "cInvName" },
-                            { "data": "cInvStd" },
-                            { "data": "iQuantity" },
-                            { "data": "cInvDefine8" },
-                            { "data": "cBatch" },
-                            { "data": "executor" }
-                        ]
-                    });
+                    $("#ifo").html(backdata.return_msg);
+                    $('#ifo-Modal').modal();
+                    table_gallery.row().clear().draw();
                 }
                 if(backdata.return_code == "success")
                 {
@@ -471,6 +411,7 @@ $(document).ready(function() {
                         "data" :  backdata.data,
                         "bDestroy":true,
                         "responsive" : true,
+                        "iDisplayLength" : 100, //默认显示的记录数
                         "language" : {
                             "url" : "Chinese.json"
                         },
@@ -489,42 +430,48 @@ $(document).ready(function() {
                 },
                 error : function(error) {
                     console.log(error);
-                    $("#ifos").html("出错了!");
-                    $('#myModal4').modal();
-                    $('#dataTables-product').DataTable({
-                        "data" :  [],
-                        "bDestroy":true,
-                        "responsive" : true,
-                        "language" : {
-                            "url" : "Chinese.json"
-                        },
-                        "columns": [
-                            { "data": "shopnum" },
-                            { "data": "cInvCode" },
-                            { "data": "cInvName" },
-                            { "data": "cInvStd" },
-                            { "data": "iQuantity" },
-                            { "data": "cInvDefine8" },
-                            { "data": "cBatch" },
-                            { "data": "executor" }
-                        ]
-                    });
+                    $("#ifo").html("出错了!");
+                    $('#ifo-Modal').modal();
+                    table_gallery.row().clear().draw();
                 }
             });
         }
         else{
-            $("#ifos").html("请选择日期!");
-            $('#myModal4').modal();
+            $("#ifo").html("请选择日期!");
+            $('#ifo-Modal').modal();
         };
     })
 }();
 
 $(document).ready(function(){
+    // 辅料管理
+    $("#product").on("click",function(){
+        var table_product=$('#dataTables-product').DataTable({
+            "ajax" : "/TestServer/rest/materail/reqAuxiliaryInfoList",
+            "bDestroy":true,
+            "responsive" : true,
+            "iDisplayLength" : 100, //默认显示的记录数
+            "language" : {
+                "url" : "Chinese.json"
+            },
+            "columns": [
+                { "data": "invcode", "title":"物料编码","defaultContent":"" },
+                { "data": "invname", "title":"物料名称","defaultContent":"" },
+                { "data": "invstd", "title":"规格型号","defaultContent":"" },
+                { "data": "validityperiod", "title":"保质期(月份)","defaultContent":"" },
+                { "data": "brand", "title":"品牌","defaultContent":"" },
+                { "data": "origin", "title":"产地","defaultContent":"" },
+                { "data": "models", "title":"涉及机型","defaultContent":"" }
+            ]
+        });
+    });
+    // 管理人员
     $("#person").on("click",function(){
         var table = $('#dataTables-keeper').DataTable({
            "ajax": "/TestServer/rest/materail/reqStorekeeperInfo",
            "bDestroy":true,
            "responsive" : true,
+           "iDisplayLength" : 100, //默认显示的记录数
            "columns": [
                { "data": "storekeeper", "title":"仓管员","defaultContent":""},
                { "data": "identifier", "title":"编号","defaultContent":""},

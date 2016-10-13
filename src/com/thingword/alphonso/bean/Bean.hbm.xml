@@ -127,5 +127,18 @@
 		<property name="linenum" type="string" />
 		<property name="workshop" type="string" />
 	</class>
+	
+	<class name="AuxiliaryInfo" table="auxiliaryinfo">
+		<id name="Id" column="Id" type="int">
+			<generator class="native" />
+		</id>
+		<property name="invcode" type="string" />
+		<property name="invname" type="string" />
+		<property name="invstd" type="string" />
+		<property name="validityperiod" type="string" />
+		<property name="brand" type="string" />
+		<property name="origin" type="string" />
+		<property name="models" type="string" />
+	</class>
 
 </hibernate-mapping>

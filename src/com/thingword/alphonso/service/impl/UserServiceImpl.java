@@ -82,7 +82,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public ReturnUserList getUserList() {
 		ReturnUserList returnUserList = new ReturnUserList();
-		List<List<String>> data = new ArrayList<>();
+		List<User> data = new ArrayList<>();
 		
 
 		List<User> ls = userDaoImpl.getAllUsers();
@@ -90,14 +90,6 @@ public class UserServiceImpl implements UserService {
 //		System.out.println("size:"+ls.size());
 
 		for (User user : ls) {
-			
-			List<String> inner = new ArrayList<>();
-			inner.add("<input type='checkbox' value='0'>");
-			inner.add(String.valueOf(user.getUserID()));
-			inner.add(user.getEmployname());
-			inner.add(user.getEmploycode());
-			inner.add(user.getUsername());
-			inner.add(user.getPasswd());
 			int authority = 0;
 			try {
 				authority = Integer.parseInt(user.getAuthority());
@@ -114,8 +106,8 @@ public class UserServiceImpl implements UserService {
 			if ((authority & 8) != 0) {
 				stringBuilder.append("<span id='rights3'>²úÏß</span> ");
 			}
-			inner.add(stringBuilder.toString());
-			data.add(inner);
+			user.setAuthority(stringBuilder.toString());
+			data.add(user);
 		}
 		returnUserList.setData(data);
 
@@ -125,7 +117,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public ReturnUserList createUser(ReqAddUser reqAddUser) {
 		ReturnUserList returnUserList = new ReturnUserList();
-		List<List<String>> data = new ArrayList<>();
+		List<User> data = new ArrayList<>();
 		User user = new User();
 		user.setUsername(reqAddUser.getAdd_account());
 		user.setPasswd(reqAddUser.getAdd_password());
@@ -147,17 +139,8 @@ public class UserServiceImpl implements UserService {
 		}
 		user.setAuthority(String.valueOf(auth));
 		String ID = userDaoImpl.createUser(user);
-		if(ID!=null){
-			List<String> inner = new ArrayList<>();
-			inner.add("<input type='checkbox' value='0'>");
-			inner.add(ID);
-			inner.add(user.getEmployname());
-			inner.add(user.getEmploycode());
-			inner.add(user.getUsername());
-			inner.add(user.getPasswd());
-			inner.add(reqAddUser.getAdd_rights());
-			data.add(inner);
-		}
+		user.setAuthority(val);
+		data.add(user);
 		returnUserList.setData(data);
 		return returnUserList;
 	}
@@ -170,7 +153,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public ReturnUserList updateUser(ReqUpdateUser requser) {
 		ReturnUserList returnUserList = new ReturnUserList();
-		List<List<String>> data = new ArrayList<>();
+		List<User> data = new ArrayList<>();
 		User user = new User();
 		user.setUsername(requser.getEdit_account());
 		user.setPasswd(requser.getEdit_password());
@@ -193,15 +176,17 @@ public class UserServiceImpl implements UserService {
 		}
 		user.setAuthority(String.valueOf(auth));
 		if(userDaoImpl.updateUser(user)){
-			List<String> inner = new ArrayList<>();
-			inner.add("<input type='checkbox' value='0'>");
-			inner.add(String.valueOf(user.getUserID()));
-			inner.add(user.getEmployname());
-			inner.add(user.getEmploycode());
-			inner.add(user.getUsername());
-			inner.add(user.getPasswd());
-			inner.add(requser.getEdit_rights());
-			data.add(inner);
+			user.setAuthority(requser.getEdit_rights());
+			data.add(user);
+//			List<String> inner = new ArrayList<>();
+//			inner.add("<input type='checkbox' value='0'>");
+//			inner.add(String.valueOf(user.getUserID()));
+//			inner.add(user.getEmployname());
+//			inner.add(user.getEmploycode());
+//			inner.add(user.getUsername());
+//			inner.add(user.getPasswd());
+//			inner.add(requser.getEdit_rights());
+//			data.add(inner);
 		}
 		returnUserList.setData(data);
 		return returnUserList;

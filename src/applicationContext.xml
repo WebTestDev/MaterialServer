@@ -28,7 +28,7 @@
 	<bean id="ProductionInfoServiceImpl"
 		class="com.thingword.alphonso.service.impl.ProductionInfoServiceImpl" />
 	<bean id="ProductionInfoDaoImpl" class="com.thingword.alphonso.dao.impl.ProductionInfoDaoImpl" />
-
+	<bean id="AuxiliaryInfoDaoImpl" class="com.thingword.alphonso.dao.impl.AuxiliaryInfoDaoImpl" />
 
 	<bean id="ERPServiceImpl" class="com.thingword.alphonso.service.impl.ERPServiceImpl" />
 	<bean id="ERPDaoImpl" class="com.thingword.alphonso.dao.impl.ERPDaoImpl" />

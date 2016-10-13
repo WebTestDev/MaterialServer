@@ -2,14 +2,16 @@ package com.thingword.alphonso.Configure;
 
 import java.util.List;
 
-public class ReturnUserList {
-	private  List<List<String>> data;
+import com.thingword.alphonso.bean.User;
 
-	public List<List<String>> getData() {
+public class ReturnUserList {
+	private  List<User> data;
+
+	public List<User> getData() {
 		return data;
 	}
 
-	public void setData(List<List<String>> data) {
+	public void setData(List<User> data) {
 		this.data = data;
 	}	
 }

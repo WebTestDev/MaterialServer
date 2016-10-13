@@ -30,6 +30,7 @@ import com.thingword.alphonso.Configure.ReturnData;
 import com.thingword.alphonso.Configure.ReturnLoginInfo;
 import com.thingword.alphonso.Configure.ReturnMessage;
 import com.thingword.alphonso.Configure.ReturnUserList;
+import com.thingword.alphonso.bean.AuxiliaryInfo;
 import com.thingword.alphonso.bean.DistributionInfo;
 import com.thingword.alphonso.bean.LoadingInfo;
 import com.thingword.alphonso.bean.ProductInfoDetail;
@@ -252,6 +253,16 @@ public class UserResource {
 				uploadedInputStream);
 	}
 	
+	@POST
+	@Path("/uploadAuxiliaryInfo")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	public ReturnData<AuxiliaryInfo> uploadAuxiliaryInfo(@FormDataParam("filepath") InputStream uploadedInputStream,
+			@FormDataParam("filepath") FormDataContentDisposition fileDetail) {
+
+		return excelServiceImpl.uploadAuxiliaryInfo(fileDetail.getFileName(),
+				uploadedInputStream);
+	}
+	
 	@GET
 	@Path("/getLoadinfoForTest")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -268,13 +279,19 @@ public class UserResource {
 	public ReturnUserList reqUserList() {
 		return userServiceImpl.getUserList();
 	}
+	
+	@GET
+	@Path("/reqAuxiliaryInfoList")
+	@Produces(MediaType.APPLICATION_JSON)
+	public ReturnData<AuxiliaryInfo> reqAuxiliaryInfoList() {
+		return excelServiceImpl.getAllAuxiliaryInfo();
+	}
 
 	@POST
 	@Path("/reqAddUser")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public ReturnUserList reqAddUser(ReqAddUser adduser) {
-		System.out.println("adduser" + adduser.getAdd_rights());
 		return userServiceImpl.createUser(adduser);
 	}
 
