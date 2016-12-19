@@ -206,6 +206,7 @@ public class UserResource {
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	public Response uploadFile(@FormDataParam("filepath") InputStream uploadedInputStream,
 			@FormDataParam("filepath") FormDataContentDisposition fileDetail) {
+		System.out.println("uploadStoreKeeperList");
 		 excelServiceImpl.uploadStoreKeeperInfo(fileDetail.getFileName(),
 				uploadedInputStream);
 		return Response.status(200).build();
