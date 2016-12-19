@@ -18,6 +18,7 @@ import javax.ws.rs.PUT;
 
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
+import org.hibernate.loader.custom.Return;
 import org.hibernate.secure.internal.DisabledJaccServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -204,12 +205,12 @@ public class UserResource {
 	@POST
 	@Path("/uploadStoreKeeperList")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	public Response uploadFile(@FormDataParam("filepath") InputStream uploadedInputStream,
+	public ReturnMessage uploadFile(@FormDataParam("filepath") InputStream uploadedInputStream,
 			@FormDataParam("filepath") FormDataContentDisposition fileDetail) {
 		System.out.println("uploadStoreKeeperList");
-		 excelServiceImpl.uploadStoreKeeperInfo(fileDetail.getFileName(),
+		 ReturnMessage message = excelServiceImpl.uploadStoreKeeperInfo(fileDetail.getFileName(),
 				uploadedInputStream);
-		return Response.status(200).build();
+		 return message;
 
 	}
 	

@@ -698,13 +698,14 @@ public class ExcelServiceImpl implements ExcelService {
 	}
 
 	@Override
-	public ReturnData<StoreKeeper> uploadStoreKeeperInfo(String name, InputStream inputStream) {
-		ReturnData<StoreKeeper> returnData = new ReturnData<>();
+	public ReturnMessage uploadStoreKeeperInfo(String name, InputStream inputStream) {
+		ReturnMessage returnData = new ReturnMessage();
 		returnData.setReturn_msg("文件上传成功");
 		returnData.setReturn_code(MESSAGE.RETURN_SUCCESS);
 		List<StoreKeeper> ls = parseStoreKeeper(inputStream);
+//		System.out.println("before uploadStoreKeeperInfo size:" + ls.size());
 		storeKeeperDaoImpl.updateUnLoadingInfoList(ls);
-		System.out.println("uploadStoreKeeperInfo size:" + ls.size());
+//		System.out.println("after uploadStoreKeeperInfo size:" + ls.size());
 		return returnData;
 	}
 

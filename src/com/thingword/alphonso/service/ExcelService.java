@@ -19,7 +19,7 @@ public interface ExcelService {
 	
 	public ReturnData<ProductionInfo> uploadProductionInfo(String naem,InputStream inputStream);
 	
-	public ReturnData<StoreKeeper> uploadStoreKeeperInfo(String name,InputStream inputStream);
+	public ReturnMessage uploadStoreKeeperInfo(String name,InputStream inputStream);
 	
 	public ReturnData<AuxiliaryInfo> uploadAuxiliaryInfo(String name,InputStream inputStream);
 	
