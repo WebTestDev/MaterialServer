@@ -27,6 +27,8 @@ public interface ProductionInfoDao {
 	
 	public List<ProductInfoDetail> getProductionInfoDetailByDateAndLine(String Date,String linenum) ;
 	
+	public List<ProductInfoDetail> getProductionInfoForLocalTest(String tasknumber,String productcode) ;
+	
 	public boolean deleteDetailByDateAndWokshop(String Date,String workshop);
 	
 	public boolean updateDetailList(List<ProductInfoDetail> ls, String date,String workshop);

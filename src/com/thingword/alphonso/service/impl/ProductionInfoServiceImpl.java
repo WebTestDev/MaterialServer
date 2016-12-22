@@ -114,4 +114,20 @@ public class ProductionInfoServiceImpl implements ProductionInfoService{
 		return returnData;
 	}
 
+	@Override
+	public ReturnData<ProductInfoDetail> getProductInfoDetailForTest(String task, String product) {
+		ReturnData<ProductInfoDetail> returnData= new ReturnData<>();	
+		List<ProductInfoDetail> ls= productionInfoDaoImpl.getProductionInfoForLocalTest(task, product);
+		returnData.setReturn_code(MESSAGE.RETURN_FAIL);
+		returnData.setReturn_msg(MESSAGE.QUERY_NONE);
+		if(ls != null){
+			if(!ls.isEmpty()){
+				returnData.setReturn_code(MESSAGE.RETURN_SUCCESS);
+				returnData.setReturn_msg(MESSAGE.QUERY_SUCCESS);
+				returnData.setData(ls);
+			}
+		}
+		return returnData;
+	}
+
 }

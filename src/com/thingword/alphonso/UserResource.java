@@ -169,6 +169,14 @@ public class UserResource {
 	}
 	
 	@POST
+	@Path("/reqProductionInfoDetailForTestByCode")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public ReturnData<ProductInfoDetail> reqProductionInfoDetailForTestByCode(ProductionInfo productionInfo) {
+		return productionInfoServiceImpl.getProductInfoDetailForTest(productionInfo.getTasknumber(), productionInfo.getProductcode());
+	}
+	
+	@POST
 	@Path("/reqProductionInfoDetailByCode")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)

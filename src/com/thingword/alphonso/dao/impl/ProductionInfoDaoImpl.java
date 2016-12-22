@@ -272,4 +272,27 @@ public class ProductionInfoDaoImpl implements ProductionInfoDao {
 		}
 		return ls;
 	}
+
+	@Override
+	public List<ProductInfoDetail> getProductionInfoForLocalTest(String tasknumber, String productcode) {
+		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+		Session s = null;
+		Transaction t = null;
+		List<ProductInfoDetail> ls = null;
+		try {
+			s = sessionFactory.openSession();
+			t = s.beginTransaction();
+			String hql = "From ProductInfoDetail where tasknumber = '" 
+			+ tasknumber + "' and productcode = '"+productcode+"'";
+			Query query = s.createQuery(hql);
+			ls = query.list();
+			t.commit();
+		} catch (Exception err) {
+			t.rollback();
+			err.printStackTrace();
+		} finally {
+			s.close();
+		}
+		return ls;
+	}
 }

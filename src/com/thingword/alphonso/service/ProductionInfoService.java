@@ -12,6 +12,8 @@ public interface ProductionInfoService {
 	
 	public ReturnData<ProductInfoDetail> getProductInfoDetailByDateAndLine(String Date,String Line) ;
 	
+	public ReturnData<ProductInfoDetail> getProductInfoDetailForTest(String task,String product) ;
+	
 	public ReturnData<StoreProductionInfo> getStoreProductionInfoByDate(String Date) ;
 	
 	public ReturnData<ProductInfoDetail> getProductionDetailByTasknumAndProductcode(ProductionInfo productionInfo); 
