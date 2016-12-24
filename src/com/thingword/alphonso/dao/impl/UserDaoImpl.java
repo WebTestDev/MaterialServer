@@ -7,6 +7,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
+import com.thingword.alphonso.bean.UpdateVeriosn;
 import com.thingword.alphonso.bean.User;
 import com.thingword.alphonso.dao.UserDao;
 import com.thingword.alphonso.util.HibernateUtil;
@@ -171,6 +172,32 @@ public class UserDaoImpl implements UserDao {
 			s.close();
 		}
 		return user;
+	}
+
+	@Override
+	public UpdateVeriosn getUpdateVersion() {
+		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+		Session s = null;
+		Transaction t = null;
+		List<UpdateVeriosn> ls = null;
+		UpdateVeriosn updateVeriosn = null;
+		try {
+			s = sessionFactory.openSession();
+			t = s.beginTransaction();
+			String hql = "select * from updateveriosn";
+			Query query = s.createSQLQuery(hql).addEntity(UpdateVeriosn.class);
+			query.setCacheable(true); // …Ë÷√ª∫¥Ê
+			ls = query.list();
+			t.commit();
+		} catch (Exception err) {
+			t.rollback();
+			err.printStackTrace();
+		} finally {
+			s.close();
+		}
+		if(!ls.isEmpty())
+			updateVeriosn = ls.get(0);
+		return updateVeriosn;
 	}
 
 }

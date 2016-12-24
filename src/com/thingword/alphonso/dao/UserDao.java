@@ -2,6 +2,7 @@ package com.thingword.alphonso.dao;
 
 import java.util.List;
 
+import com.thingword.alphonso.bean.UpdateVeriosn;
 import com.thingword.alphonso.bean.User;  
 
 
@@ -26,4 +27,5 @@ public interface UserDao {
     
     public User getUserByNamePasswd(String name, String passwd);
     
+    public UpdateVeriosn getUpdateVersion();
 }

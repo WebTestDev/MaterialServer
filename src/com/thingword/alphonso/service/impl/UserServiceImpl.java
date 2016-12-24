@@ -12,7 +12,9 @@ import com.thingword.alphonso.Configure.ReqDelUser;
 import com.thingword.alphonso.Configure.ReqUpdateUser;
 import com.thingword.alphonso.Configure.ReturnLoginInfo;
 import com.thingword.alphonso.Configure.ReturnMessage;
+import com.thingword.alphonso.Configure.ReturnUpdateVerion;
 import com.thingword.alphonso.Configure.ReturnUserList;
+import com.thingword.alphonso.bean.UpdateVeriosn;
 import com.thingword.alphonso.bean.User;
 import com.thingword.alphonso.dao.impl.UserDaoImpl;
 import com.thingword.alphonso.service.UserService;
@@ -190,6 +192,18 @@ public class UserServiceImpl implements UserService {
 		}
 		returnUserList.setData(data);
 		return returnUserList;
+	}
+
+	@Override
+	public ReturnUpdateVerion getUpdateVerion() {
+		ReturnUpdateVerion returnUpdateVerion = new ReturnUpdateVerion();
+		returnUpdateVerion.setReturn_code(MESSAGE.RETURN_FAIL);
+		UpdateVeriosn updateVeriosn = userDaoImpl.getUpdateVersion();
+		if(updateVeriosn!=null){
+			returnUpdateVerion.setVersion(updateVeriosn);
+			returnUpdateVerion.setReturn_code(MESSAGE.RETURN_SUCCESS);
+		}
+		return returnUpdateVerion;
 	}
 
 }

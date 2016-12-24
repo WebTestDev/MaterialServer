@@ -1,16 +1,23 @@
 package com.thingword.alphonso;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -30,6 +37,7 @@ import com.thingword.alphonso.Configure.ReturnBatchData;
 import com.thingword.alphonso.Configure.ReturnData;
 import com.thingword.alphonso.Configure.ReturnLoginInfo;
 import com.thingword.alphonso.Configure.ReturnMessage;
+import com.thingword.alphonso.Configure.ReturnUpdateVerion;
 import com.thingword.alphonso.Configure.ReturnUserList;
 import com.thingword.alphonso.bean.AuxiliaryInfo;
 import com.thingword.alphonso.bean.DistributionInfo;
@@ -39,6 +47,7 @@ import com.thingword.alphonso.bean.ProductionInfo;
 import com.thingword.alphonso.bean.StoreKeeper;
 import com.thingword.alphonso.bean.StoreProductionInfo;
 import com.thingword.alphonso.bean.UnLoadingInfo;
+import com.thingword.alphonso.bean.UpdateVeriosn;
 import com.thingword.alphonso.bean.User;
 import com.thingword.alphonso.bean2.RdRecord;
 import com.thingword.alphonso.dao.LoadingInfoDao;
@@ -93,6 +102,8 @@ public class UserResource {
 	public UserResource() {
 		LOGGER.fine("UserResource()");
 	}
+	
+	/*---------------------------APP-----------------------------------------*/
 
 	@POST
 	@Path("/reqUserLoginInfo")
@@ -102,22 +113,12 @@ public class UserResource {
 		ReturnLoginInfo returnLoginInfo = userServiceImpl.checkUser(user);
 		return returnLoginInfo;
 	}
-
+	
 	@POST
-	@Path("/reqLoadingInfo")
-	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/reqUpdateVerion")
 	@Produces(MediaType.APPLICATION_JSON)
-	public ReturnData<LoadingInfo> reqLoadingInfo(ReqInfo reqInfo) {
-		System.out.println("reqLoadingInfo");
-		return loadingInfoServiceImpl.getLoadingInfoByDate(reqInfo);
-	}
-
-	@POST
-	@Path("/reqUnLoadingInfo")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public ReturnData<UnLoadingInfo> reqUnLoadingInfo(ReqInfo reqInfo) {
-		return unloadingInfoServiceImpl.getUnLoadingInfoByDate(reqInfo);
+	public ReturnUpdateVerion reqUpdateVerion() {
+		return userServiceImpl.getUpdateVerion();
 	}
 	
 	@POST
@@ -128,54 +129,6 @@ public class UserResource {
 		return unloadingInfoServiceImpl.getBatchUnLoadingInfoByDate(reqInfo);
 	}
 	
-	@GET
-	@Path("/reqStorekeeperInfo")
-	@Produces(MediaType.APPLICATION_JSON)
-	public ReturnData<StoreKeeper> reqStorekeeperInfo() {
-		return storeKeeperServiceImpl.getStoreKeeperList();
-	}
-	
-	@POST
-	@Path("/reqProductionInfo")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public ReturnData<ProductionInfo> reqProductionInfo(ReqInfo reqInfo) {
-		System.out.println("reqProductionInfo£º"+reqInfo.getLinenum());
-		return productionInfoServiceImpl.getProductionInfoByDateAndLine(reqInfo.getDate(),reqInfo.getLinenum());
-	}
-
-	@POST
-	@Path("/reqDistriInfo")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public ReturnData<DistributionInfo> reqDistriInfo(ReqInfo reqInfo) {
-		return distriInfoServiceImpl.getDistriInfoByDate(reqInfo);
-	}
-	
-	@POST
-	@Path("/reqStoreProductionInfo")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public ReturnData<StoreProductionInfo> reqStoreProductionInfo(ReqInfo reqInfo) {
-		return productionInfoServiceImpl.getStoreProductionInfoByDate(reqInfo.getDate());
-	}
-	
-	@POST
-	@Path("/reqProductionInfoDetail")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public ReturnData<ProductInfoDetail> reqProductionInfoDetail(ReqInfo reqInfo) {
-		return productionInfoServiceImpl.getProductInfoDetailByDateAndLine(reqInfo.getDate(),reqInfo.getLinenum());
-	}
-	
-	@POST
-	@Path("/reqProductionInfoDetailForTestByCode")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public ReturnData<ProductInfoDetail> reqProductionInfoDetailForTestByCode(ProductionInfo productionInfo) {
-		return productionInfoServiceImpl.getProductInfoDetailForTest(productionInfo.getTasknumber(), productionInfo.getProductcode());
-	}
-	
 	@POST
 	@Path("/reqProductionInfoDetailByCode")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -184,21 +137,127 @@ public class UserResource {
 		return productionInfoServiceImpl.getProductionDetailByTasknumAndProductcode(productionInfo);
 	}
 	
-	@POST
-	@Path("/reqERPTest")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public ReturnData<RdRecord> reqUserTest(ReqInfo reqInfo) {
-		erpServiceImpl.getRd();
-		return null;
+	@GET
+	@Path("/reqUpdateFile")
+	@Produces("application/octet-stream")
+	public Response reqUpdateFile() {	
+		UpdateVeriosn updateVeriosn = userServiceImpl.getUpdateVerion().getVersion();
+		if(updateVeriosn!=null){
+			if(updateVeriosn.getPath()!=null){
+				File file = new File(updateVeriosn.getPath());
+				StreamingOutput stream = null;
+				int size = 0;
+				try {
+					final InputStream in = new FileInputStream(file);
+					size = in.available();
+					stream = new StreamingOutput() {
+						public void write(OutputStream out) throws IOException, WebApplicationException {
+							try {
+								int read = 0;
+								byte[] bytes = new byte[1024];
+								while ((read = in.read(bytes)) != -1) {
+									out.write(bytes, 0, read);
+								}
+							} catch (Exception e) {
+								throw new WebApplicationException(e);
+							}
+						}
+					};
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				return Response.ok(stream).header("Connection", "keep-alive").header("Content-Length", String.valueOf(size))
+						.build();
+			}
+		}
+		return Response.serverError().build();
 	}
+	
+//	@POST
+//	@Path("/reqLoadingInfo")
+//	@Consumes(MediaType.APPLICATION_JSON)
+//	@Produces(MediaType.APPLICATION_JSON)
+//	public ReturnData<LoadingInfo> reqLoadingInfo(ReqInfo reqInfo) {
+//		System.out.println("reqLoadingInfo");
+//		return loadingInfoServiceImpl.getLoadingInfoByDate(reqInfo);
+//	}
 
-	@POST
-	@Path("/reqAllUnLoadingInfo")
-	@Consumes(MediaType.APPLICATION_JSON)
+//	@POST
+//	@Path("/reqUnLoadingInfo")
+//	@Consumes(MediaType.APPLICATION_JSON)
+//	@Produces(MediaType.APPLICATION_JSON)
+//	public ReturnData<UnLoadingInfo> reqUnLoadingInfo(ReqInfo reqInfo) {
+//		return unloadingInfoServiceImpl.getUnLoadingInfoByDate(reqInfo);
+//	}
+	
+//	@POST
+//	@Path("/reqProductionInfo")
+//	@Consumes(MediaType.APPLICATION_JSON)
+//	@Produces(MediaType.APPLICATION_JSON)
+//	public ReturnData<ProductionInfo> reqProductionInfo(ReqInfo reqInfo) {
+//		System.out.println("reqProductionInfo£º"+reqInfo.getLinenum());
+//		return productionInfoServiceImpl.getProductionInfoByDateAndLine(reqInfo.getDate(),reqInfo.getLinenum());
+//	}
+//
+//	@POST
+//	@Path("/reqDistriInfo")
+//	@Consumes(MediaType.APPLICATION_JSON)
+//	@Produces(MediaType.APPLICATION_JSON)
+//	public ReturnData<DistributionInfo> reqDistriInfo(ReqInfo reqInfo) {
+//		return distriInfoServiceImpl.getDistriInfoByDate(reqInfo);
+//	}
+	
+//	@GET
+//	@Path("/getLoadinfoForTest")
+//	@Produces(MediaType.APPLICATION_JSON)
+//	public ReturnData<UnLoadingInfo> getLoadinfoForTest() {
+//		ReqInfo reqInfo = new ReqInfo();
+//		reqInfo.setDate("2016-08-25");
+//		return unloadingInfoServiceImpl.getUnLoadingInfoByDate(reqInfo);
+//	}
+	
+	
+//	@POST
+//	@Path("/reqStoreProductionInfo")
+//	@Consumes(MediaType.APPLICATION_JSON)
+//	@Produces(MediaType.APPLICATION_JSON)
+//	public ReturnData<StoreProductionInfo> reqStoreProductionInfo(ReqInfo reqInfo) {
+//		return productionInfoServiceImpl.getStoreProductionInfoByDate(reqInfo.getDate());
+//	}
+	
+//	@POST
+//	@Path("/reqProductionInfoDetail")
+//	@Consumes(MediaType.APPLICATION_JSON)
+//	@Produces(MediaType.APPLICATION_JSON)
+//	public ReturnData<ProductInfoDetail> reqProductionInfoDetail(ReqInfo reqInfo) {
+//		return productionInfoServiceImpl.getProductInfoDetailByDateAndLine(reqInfo.getDate(),reqInfo.getLinenum());
+//	}
+	
+//	@POST
+//	@Path("/reqProductionInfoDetailForTestByCode")
+//	@Consumes(MediaType.APPLICATION_JSON)
+//	@Produces(MediaType.APPLICATION_JSON)
+//	public ReturnData<ProductInfoDetail> reqProductionInfoDetailForTestByCode(ProductionInfo productionInfo) {
+//		return productionInfoServiceImpl.getProductInfoDetailForTest(productionInfo.getTasknumber(), productionInfo.getProductcode());
+//	}
+	
+	
+//	@POST
+//	@Path("/reqERPTest")
+//	@Consumes(MediaType.APPLICATION_JSON)
+//	@Produces(MediaType.APPLICATION_JSON)
+//	public ReturnData<RdRecord> reqUserTest(ReqInfo reqInfo) {
+//		erpServiceImpl.getRd();
+//		return null;
+//	}
+
+	/*---------------------------WEB-----------------------------------------*/
+	
+	@GET
+	@Path("/reqStorekeeperInfo")
 	@Produces(MediaType.APPLICATION_JSON)
-	public ReturnData<UnLoadingInfo> reqAllUnLoadingInfo(ReqInfo reqInfo) {
-		return unloadingInfoServiceImpl.getAllUnLoadingInfoByDate(reqInfo);
+	public ReturnData<StoreKeeper> reqStorekeeperInfo() {
+		return storeKeeperServiceImpl.getStoreKeeperList();
 	}
 	
 	@POST
@@ -233,35 +292,35 @@ public class UserResource {
 
 	}
 	
-	@POST
-	@Path("/uploadProductionInfoOfWorkshop2")
-	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	public ReturnData<ProductionInfo> uploadProductionInfoOfWorkshop2(@FormDataParam("filepath") InputStream uploadedInputStream,
-			@FormDataParam("filepath") FormDataContentDisposition fileDetail) {
-
-		return excelServiceImpl.uploadProductionInfoOfWorkShop2(fileDetail.getFileName(),
-				uploadedInputStream);
-	}
+//	@POST
+//	@Path("/uploadProductionInfoOfWorkshop2")
+//	@Consumes(MediaType.MULTIPART_FORM_DATA)
+//	public ReturnData<ProductionInfo> uploadProductionInfoOfWorkshop2(@FormDataParam("filepath") InputStream uploadedInputStream,
+//			@FormDataParam("filepath") FormDataContentDisposition fileDetail) {
+//
+//		return excelServiceImpl.uploadProductionInfoOfWorkShop2(fileDetail.getFileName(),
+//				uploadedInputStream);
+//	}
+//	
+//	@POST
+//	@Path("/uploadProductionInfoOfWorkshop1")
+//	@Consumes(MediaType.MULTIPART_FORM_DATA)
+//	public ReturnData<ProductionInfo> uploadProductionInfoOfWorkshop1(@FormDataParam("filepath") InputStream uploadedInputStream,
+//			@FormDataParam("filepath") FormDataContentDisposition fileDetail) {
+//
+//		return excelServiceImpl.uploadProductionInfoOfWorkshop1(fileDetail.getFileName(),
+//				uploadedInputStream);
+//	}
 	
-	@POST
-	@Path("/uploadProductionInfoOfWorkshop1")
-	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	public ReturnData<ProductionInfo> uploadProductionInfoOfWorkshop1(@FormDataParam("filepath") InputStream uploadedInputStream,
-			@FormDataParam("filepath") FormDataContentDisposition fileDetail) {
-
-		return excelServiceImpl.uploadProductionInfoOfWorkshop1(fileDetail.getFileName(),
-				uploadedInputStream);
-	}
-	
-	@POST
-	@Path("/uploadProductionInfo")
-	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	public ReturnData<ProductionInfo> uploadProductionInfo(@FormDataParam("filepath") InputStream uploadedInputStream,
-			@FormDataParam("filepath") FormDataContentDisposition fileDetail) {
-
-		return excelServiceImpl.uploadProductionInfo(fileDetail.getFileName(),
-				uploadedInputStream);
-	}
+//	@POST
+//	@Path("/uploadProductionInfo")
+//	@Consumes(MediaType.MULTIPART_FORM_DATA)
+//	public ReturnData<ProductionInfo> uploadProductionInfo(@FormDataParam("filepath") InputStream uploadedInputStream,
+//			@FormDataParam("filepath") FormDataContentDisposition fileDetail) {
+//
+//		return excelServiceImpl.uploadProductionInfo(fileDetail.getFileName(),
+//				uploadedInputStream);
+//	}
 	
 	@POST
 	@Path("/uploadAuxiliaryInfo")
@@ -273,13 +332,12 @@ public class UserResource {
 				uploadedInputStream);
 	}
 	
-	@GET
-	@Path("/getLoadinfoForTest")
+	@POST
+	@Path("/reqAllUnLoadingInfo")
+	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public ReturnData<UnLoadingInfo> getLoadinfoForTest() {
-		ReqInfo reqInfo = new ReqInfo();
-		reqInfo.setDate("2016-08-25");
-		return unloadingInfoServiceImpl.getUnLoadingInfoByDate(reqInfo);
+	public ReturnData<UnLoadingInfo> reqAllUnLoadingInfo(ReqInfo reqInfo) {
+		return unloadingInfoServiceImpl.getAllUnLoadingInfoByDate(reqInfo);
 	}
 	
 

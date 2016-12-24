@@ -140,5 +140,14 @@
 		<property name="origin" type="string" />
 		<property name="models" type="string" />
 	</class>
+	
+	<class name="UpdateVeriosn" table="updateveriosn">
+		<id name="Id" column="Id" type="int">
+			<generator class="native" />
+		</id>
+		<property name="version" type="string" />
+		<property name="description" type="string" />
+		<property name="path" type="string" />
+	</class>
 
 </hibernate-mapping>

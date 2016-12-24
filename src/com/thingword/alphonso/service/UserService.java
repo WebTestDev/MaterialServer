@@ -9,7 +9,9 @@ import com.thingword.alphonso.Configure.ReqDelUser;
 import com.thingword.alphonso.Configure.ReqUpdateUser;
 import com.thingword.alphonso.Configure.ReturnLoginInfo;
 import com.thingword.alphonso.Configure.ReturnMessage;
+import com.thingword.alphonso.Configure.ReturnUpdateVerion;
 import com.thingword.alphonso.Configure.ReturnUserList;
+import com.thingword.alphonso.bean.UpdateVeriosn;
 import com.thingword.alphonso.bean.User;
 
 
@@ -41,6 +43,9 @@ public interface UserService {
     public boolean deleteUserById(ReqDelUser user);
     
     public ReturnUserList updateUser(ReqUpdateUser user);
+    
+    public ReturnUpdateVerion getUpdateVerion();
+
     
     
 }
