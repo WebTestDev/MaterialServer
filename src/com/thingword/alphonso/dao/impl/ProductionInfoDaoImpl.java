@@ -285,6 +285,7 @@ public class ProductionInfoDaoImpl implements ProductionInfoDao {
 			String hql = "From ProductInfoDetail where tasknumber = '" 
 			+ tasknumber + "' and productcode = '"+productcode+"'";
 			Query query = s.createQuery(hql);
+			System.out.println(hql);
 			ls = query.list();
 			t.commit();
 		} catch (Exception err) {

@@ -27,12 +27,8 @@ public class LoadingInfoServiceImpl implements LoadingInfoService {
 	@Override
 	public ReturnData<LoadingInfo> getLoadingInfoByDate(ReqInfo reqinfo) {
 		ReturnData<LoadingInfo> returnData= new ReturnData<>();
-		
-
 		//1.获取数据库有的数据库的入库但；
-		//2.更新数据的loadingInfo信息；
-		
-		
+		//2.更新数据的loadingInfo信息；	
 		List<LoadingInfo> ls= loadingInfoDaoImpl.getLoadingInfoByDate(reqinfo.getDate(), reqinfo.getPerson());
 		returnData.setReturn_code(MESSAGE.RETURN_FAIL);
 		returnData.setReturn_msg(MESSAGE.QUERY_NONE);

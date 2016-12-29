@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta HTTP-EQUIV="Pragma" CONTENT="no-cache">
+		<meta HTTP-EQUIV="Cache-Control" CONTENT="no-cache">
+		<meta HTTP-EQUIV="Expires" CONTENT="0">
+		<title>物料管理&nbsp;|&nbsp;达峰科技</title>
+		<link rel="shortcut icon" href="css/img/dafeng.ico"/>
+		<link rel="stylesheet" type="text/css" href="css/index.css"/>
+	</head>
+	<body>
+		<header>
+			<a>
+				<img src="css/img/logo.png"/>
+				达峰科技物料管理系统
+			</a>
+			<ul>
+				<li name="#account">账户管理</li>
+				<li name="#gallery">辅料管理</li>
+				<li name="#product">仓库管理</li>
+			</ul>
+		</header>
+		<ul id="main">
+			<li id="account">
+				<h1>账户管理</h1>
+				<div class="row">
+					<p>账户管理</p>
+					<div id="table1" class="table" name="">
+						<div class="ttitle">
+							操作按钮:
+							<div>
+								<button id="adduser" class="btn btn_blue">增加</button>
+								<button id="change" class="btn btn_blue">修改</button>
+								<button id="delete" class="btn btn_red">删除</button>
+							</div>
+							<span>
+								<input type="text" name="#table1" class="search" value="" placeholder="搜索..."/>
+								<b></b>
+							</span>
+						</div>
+						<table cellspacing="0">
+							<thead>
+								<tr>
+									<th>选择</th><th>账号</th><th>密码</th><th>仓管员</th><th>权限</th>
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+						</table>
+						<div class="tfooter">
+							<button class="btn btn_green" onclick="accountLoad()">刷新列表</button>
+							<div name="#table1">
+								<button class="btn btn_jump scc">上页</button>
+								<span>0</span>
+								<button class="btn btn_jump add">下页</button>
+								共<b>0</b>页
+							</div>
+						</div>
+					</div>
+				</div>
+			</li>
+			<li id="gallery">
+				<h1>辅料管理</h1>
+				<div class="form">
+					<form>
+						请选择文件:
+						<input id="filepath1" type="file" name="filepath" style="display:none"/>
+						<button class="ipt filelook">浏览</button>
+						<button class="ipt name" style="display:none">名字</button>
+						<button class="ipt" onclick="fileloadon(this,'/TestServer/rest/materail/uploadAuxiliaryInfo')">上传文件</button>
+					</form>
+				</div>
+				<div class="row">
+					<p>辅料管理</p>
+					<div id="table2" class="table">
+						<div class="ttitle">
+							辅料管理列表 :
+							<span>
+								<input type="text" name="#table2" class="search" value="" placeholder="搜索..."/>
+								<b></b>
+							</span>
+						</div>
+						<!--表单-->
+						<table cellspacing="0">
+							<thead>
+								<tr>
+			<th>物料编码</th><th>物料名称</th><th>规格型号</th><th>保质期(月份)</th><th>品牌</th><th>产地</th><th>涉及机型</th>
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+						</table>
+						<div class="tfooter">
+							<button class="btn btn_green" onclick="galleryLoad()">刷新列表</button>
+							<div name="#table2">
+								<button class="btn btn_jump scc">上页</button>
+								<span>0</span>
+								<button class="btn btn_jump add">下页</button>
+								共<b>0</b>页
+							</div>
+						</div>
+					</div>
+				</div>
+			</li>
+			<li id="product">
+				<h1>仓库管理</h1>
+				<div class="form">
+					<form>
+						请选择文件:
+						<input id="filepath2" type="file" name="filepath" style="display:none"/>
+						<button class="ipt filelook">浏览</button>
+						<button class="ipt name" style="display:none">名字</button>
+						<button class="ipt" onclick="fileloadon(this,'/TestServer/rest/materail/uploadProductionInfoForStore')">上传文件</button>
+					</form>
+				</div>
+				<div class="row">
+					<p>仓库管理</p>
+					<div id="table3" class="table">
+						<div class="ttitle">
+							请选择日期:
+							<input id="date" readonly="readonly" onclick="laydate()" class="laydate-icon"/>
+							<button class="btn btn_blue" id="datebutton" onclick="productLoad()">确认</button>
+							<span>
+								<input type="text" name="#table3" class="search" value="" placeholder="搜索..."/>
+								<b></b>
+							</span>
+						</div>
+						<!--表单-->
+						<table cellspacing="0">
+							<thead>
+								<tr>
+			<th>产线</th><th>产品编号</th><th>材料名称</th><th>批号</th><th>仓管员</th><th>数量</th><th>默认货位</th><th>规格型号</th>
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+						</table>
+						<div class="tfooter">
+							<div name="#table3">
+								<button class="btn btn_jump scc">上页</button>
+								<span>0</span>
+								<button class="btn btn_jump add">下页</button>
+								共<b>0</b>页
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="form">
+					<form>
+						请选择仓管员文件:
+						<input id="filepath3" type="file" name="filepath" style="display:none"/>
+						<button class="ipt filelook">浏览</button>
+						<button class="ipt name" style="display:none">名字</button>
+						<button class="ipt" onclick="fileloadon(this,'/TestServer/rest/materail/uploadStoreKeeperList')">上传文件</button>
+					</form>
+				</div>
+				<!--仓管人员-->
+				<div class="row">
+					<p>管理人员</p>
+					<div  id="table4" class="table">
+						<div class="ttitle">
+							仓管人员列表 :
+							<span>
+								<input type="text" name="#table4" class="search" value="" placeholder="搜索..."/>
+								<b></b>
+							</span>
+						</div>
+						<!--表单-->
+						<table cellspacing="0">
+							<thead>
+								<tr>
+			<th>仓管员</th><th>编号</th><th>规格</th><th>位置</th><th>物料名称</th><th>物料编码</th><th>仓库名称</th>
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+						</table>
+						<div class="tfooter">
+							<button class="btn btn_green" onclick="producterLoad()">刷新列表</button>
+							<div name="#table4">
+								<button class="btn btn_jump scc">上页</button>
+								<span>0</span>
+								<button class="btn btn_jump add">下页</button>
+								共<b>0</b>页
+							</div>
+						</div>
+					</div>
+				</div>
+			</li>
+		</ul>
+		<!--增加账户-->
+		<div id="modal" class="popup">
+			<div>
+				<p>新增<a class="modal_close">&times;</a></p>
+				<div id="modalbox">
+					<b>账号</b><span></span>
+					<input type="text" name="" id="adminAccount" placeholder="请输入账号"/>
+					<b>密码</b><span></span>
+					<input type="text" name="" id="adminPsw" placeholder="请输入密码"/>
+					<b>仓管员</b><span></span>
+					<input type="text" name="" id="adminName" placeholder="请输入仓管员姓名"/>
+					<label><input type="checkbox" name="model" mr="rights1" mc="仓库"/> 仓库</label><br />
+					<label><input type="checkbox" name="model" mr="rights2" mc="配料"/> 配料</label><br />
+					<label><input type="checkbox" name="model" mr="rights3" mc="产线"/> 产线</label><br />
+				</div>
+				<p>
+					<button class="modal_submit">提交</button>
+					<button class="modal_close">关闭</button>
+				</p>
+			</div>
+		</div>
+		<!--提示框-->
+		<div id="mask" class="popup">
+			<div>
+				<p>提示 :<a class="mask_close">&times;</a></p>
+				<div>
+					提交失败！
+				</div>
+				<p>
+					<button class="mask_close">关闭</button>
+				</p>
+			</div>
+		</div>
+		<!--延时动画-->
+		<div id="loading">
+			<div>
+				<div class="n1"></div>
+				<div class="n2"></div>
+				<div class="n3"></div>
+				<div class="n4"></div>
+				<div class="n5"></div>
+				<div class="n6"></div>
+				<div class="n7"></div>
+			</div>
+		</div>
+		<script src="js/jquery.min.js"></script>
+		<script src="js/jquery-form.js"></script>
+		<script src="js/laydate/laydate.js"></script>
+		<script src="js/index.js"></script>
+	</body>
+</html>

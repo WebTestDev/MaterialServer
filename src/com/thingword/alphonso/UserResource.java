@@ -173,14 +173,14 @@ public class UserResource {
 		return Response.serverError().build();
 	}
 	
-//	@POST
-//	@Path("/reqLoadingInfo")
-//	@Consumes(MediaType.APPLICATION_JSON)
-//	@Produces(MediaType.APPLICATION_JSON)
-//	public ReturnData<LoadingInfo> reqLoadingInfo(ReqInfo reqInfo) {
-//		System.out.println("reqLoadingInfo");
-//		return loadingInfoServiceImpl.getLoadingInfoByDate(reqInfo);
-//	}
+	@POST
+	@Path("/reqLoadingInfo")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public ReturnData<LoadingInfo> reqLoadingInfo(ReqInfo reqInfo) {
+		System.out.println("reqLoadingInfo");
+		return loadingInfoServiceImpl.getLoadingInfoByDate(reqInfo);
+	}
 
 //	@POST
 //	@Path("/reqUnLoadingInfo")
@@ -233,13 +233,13 @@ public class UserResource {
 //		return productionInfoServiceImpl.getProductInfoDetailByDateAndLine(reqInfo.getDate(),reqInfo.getLinenum());
 //	}
 	
-//	@POST
-//	@Path("/reqProductionInfoDetailForTestByCode")
-//	@Consumes(MediaType.APPLICATION_JSON)
-//	@Produces(MediaType.APPLICATION_JSON)
-//	public ReturnData<ProductInfoDetail> reqProductionInfoDetailForTestByCode(ProductionInfo productionInfo) {
-//		return productionInfoServiceImpl.getProductInfoDetailForTest(productionInfo.getTasknumber(), productionInfo.getProductcode());
-//	}
+	@POST
+	@Path("/reqProductionInfoDetailForTestByCode")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public ReturnData<ProductInfoDetail> reqProductionInfoDetailForTestByCode(ProductionInfo productionInfo) {
+		return productionInfoServiceImpl.getProductInfoDetailForTest(productionInfo.getTasknumber(), productionInfo.getProductcode());
+	}
 	
 	
 //	@POST
